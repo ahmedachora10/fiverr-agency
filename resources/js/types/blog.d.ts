@@ -31,6 +31,20 @@ export interface Tag {
   updated_at: string;
 }
 
+
+export interface BlogPost {
+  id: number;
+  title: string;
+  excerpt: string;
+  image: string;
+  author: User;
+  created_at: Date;
+  category: Category;
+  slug: string;
+  tags: Tag[];
+  reading_time_minutes: number;
+}
+
 export interface Post {
   id: number;
   title: string;

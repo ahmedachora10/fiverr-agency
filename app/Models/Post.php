@@ -71,6 +71,10 @@ class Post extends Model
                 }
             }
         });
+
+        static::retrieved(function (Post $post) {
+            $post->image = asset($post->featured_image);
+        });
     }
 
     public function author(): BelongsTo

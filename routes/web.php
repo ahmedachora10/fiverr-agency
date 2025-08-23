@@ -1,12 +1,14 @@
 <?php
 
-use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Admin\TagController;
+use App\Models\Post;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
+
 Route::get('/', function () {
-    return Inertia::render('welcome');
+    return Inertia::render('Index', [
+        'posts' => Post::with(['category', 'tags', 'author'])->take(6)->get(),
+    ]);
 })->name('home');
 
 Route::middleware([
