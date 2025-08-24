@@ -1,8 +1,8 @@
-import React from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import { Post } from '@/types/blog';
 import AppLayout from '@/layouts/app-layout';
 import { PencilIcon, TrashIcon, EyeIcon } from 'lucide-react';
+import { useTranslation } from '@/utils/translation';
 
 
 interface Props {
@@ -10,6 +10,7 @@ interface Props {
 }
 
 export default function Show({ post }: Props) {
+  const { tBest } = useTranslation(post);
   const handleDelete = () => {
     if (confirm('Are you sure you want to delete this post? This action cannot be undone.')) {
       router.delete(route('admin.posts.destroy', post.id));
@@ -39,7 +40,7 @@ export default function Show({ post }: Props) {
         </h2>
         <div className="flex space-x-4">
           <a
-            href={route('blog.show', post.slug)}
+            href={route('blog.show', { slug: tBest('slug') })}
             target="_blank"
             className="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150"
           >
@@ -62,7 +63,7 @@ export default function Show({ post }: Props) {
           </button>
         </div>
       </div>
-      <Head title={`Post: ${post.title}`} />
+      <Head title={`Post: ${tBest('title')}`} />
 
       <div className="py-12">
         <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -83,7 +84,7 @@ export default function Show({ post }: Props) {
                             color: post.category.color,
                           }}
                         >
-                          {post.category.name}
+                          {useTranslation(post.category).tBest('name')}
                         </span>
                       )}
                     </div>
@@ -92,7 +93,7 @@ export default function Show({ post }: Props) {
                     </div>
                   </div>
 
-                  <h1 className="text-3xl font-bold text-gray-900 mb-4">{post.title}</h1>
+                  <h1 className="text-3xl font-bold text-gray-900 mb-4">{tBest('title')}</h1>
 
                   <div className="flex items-center text-sm text-gray-600 mb-6">
                     <img
@@ -113,10 +114,10 @@ export default function Show({ post }: Props) {
                     <span>{post.reading_time_minutes} min read</span>
                   </div>
 
-                  {post.excerpt && (
+                  {tBest('excerpt') && (
                     <div className="mb-6">
                       <h3 className="text-lg font-medium text-gray-900 mb-2">Excerpt</h3>
-                      <p className="text-gray-600">{post.excerpt}</p>
+                      <p className="text-gray-600">{tBest('excerpt')}</p>
                     </div>
                   )}
                 </div>
@@ -129,7 +130,7 @@ export default function Show({ post }: Props) {
                     <h3 className="text-lg font-medium text-gray-900 mb-4">Featured Image</h3>
                     <img
                       src={`/storage/${post.featured_image}`}
-                      alt={post.title}
+                      alt={tBest('title')}
                       className="w-full h-64 object-cover rounded-lg"
                     />
                   </div>
@@ -142,7 +143,7 @@ export default function Show({ post }: Props) {
                   <h3 className="text-lg font-medium text-gray-900 mb-4">Content</h3>
                   <div className="prose max-w-none">
                     <div className="whitespace-pre-wrap text-gray-700">
-                      {post.body}
+                      {tBest('body')}
                     </div>
                   </div>
                 </div>
@@ -155,15 +156,15 @@ export default function Show({ post }: Props) {
                   <div className="grid grid-cols-1 gap-4">
                     <div>
                       <dt className="text-sm font-medium text-gray-500">Meta Title</dt>
-                      <dd className="mt-1 text-sm text-gray-900">{post.meta_title || post.title}</dd>
+                      <dd className="mt-1 text-sm text-gray-900">{post.meta_title || tBest('title')}</dd>
                     </div>
                     <div>
                       <dt className="text-sm font-medium text-gray-500">Meta Description</dt>
-                      <dd className="mt-1 text-sm text-gray-900">{post.meta_description || post.excerpt || 'No meta description'}</dd>
+                      <dd className="mt-1 text-sm text-gray-900">{post.meta_description || tBest('excerpt') || 'No meta description'}</dd>
                     </div>
                     <div>
                       <dt className="text-sm font-medium text-gray-500">Slug</dt>
-                      <dd className="mt-1 text-sm text-gray-900 font-mono">{post.slug}</dd>
+                      <dd className="mt-1 text-sm text-gray-900 font-mono">{tBest('slug')}</dd>
                     </div>
                     {post.canonical_url && (
                       <div>
@@ -200,11 +201,11 @@ export default function Show({ post }: Props) {
                   <div className="grid grid-cols-1 gap-4">
                     <div>
                       <dt className="text-sm font-medium text-gray-500">OG Title</dt>
-                      <dd className="mt-1 text-sm text-gray-900">{post.og_title || post.title}</dd>
+                      <dd className="mt-1 text-sm text-gray-900">{post.og_title || tBest('title')}</dd>
                     </div>
                     <div>
                       <dt className="text-sm font-medium text-gray-500">OG Description</dt>
-                      <dd className="mt-1 text-sm text-gray-900">{post.og_description || post.excerpt || 'No OG description'}</dd>
+                      <dd className="mt-1 text-sm text-gray-900">{post.og_description || tBest('excerpt') || 'No OG description'}</dd>
                     </div>
                     {(post.og_image || post.featured_image) && (
                       <div>

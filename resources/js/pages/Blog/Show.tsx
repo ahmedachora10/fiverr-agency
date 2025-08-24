@@ -1,7 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useTransition } from 'react';
 import { Head, Link } from '@inertiajs/react';
 import { Post } from '@/types/blog';
 import { ClockIcon, EyeIcon, CalendarIcon, UserIcon } from 'lucide-react';
+import { useTranslation } from '@/utils/translation';
+
 
 interface Props {
     post: Post;
@@ -9,10 +11,11 @@ interface Props {
 }
 
 export default function Show({ post, relatedPosts }: Props) {
+    const { tBest } = useTranslation(post);
     useEffect(() => {
         // Set up SEO meta tags dynamically
-        const metaTitle = post.meta_title || post.title;
-        const metaDescription = post.meta_description || post.excerpt || '';
+        const metaTitle = post.meta_title || tBest('title');
+        const metaDescription = post.meta_description || tBest('excerpt') || '';
         const ogImage = post.og_image ? `/storage/${post.og_image}` : (post.featured_image ? `/storage/${post.featured_image}` : '');
 
         document.title = metaTitle;
@@ -34,16 +37,16 @@ export default function Show({ post, relatedPosts }: Props) {
         };
 
         updateMetaTag('description', metaDescription);
-        updateMetaTag('og:title', post.og_title || post.title, true);
-        updateMetaTag('og:description', post.og_description || post.excerpt || '', true);
+        updateMetaTag('og:title', post.og_title || tBest('title'), true);
+        updateMetaTag('og:description', post.og_description || tBest('excerpt') || '', true);
         updateMetaTag('og:type', 'article', true);
         updateMetaTag('og:url', window.location.href, true);
         if (ogImage) {
             updateMetaTag('og:image', ogImage, true);
         }
         updateMetaTag('twitter:card', 'summary_large_image', true);
-        updateMetaTag('twitter:title', post.og_title || post.title, true);
-        updateMetaTag('twitter:description', post.og_description || post.excerpt || '', true);
+        updateMetaTag('twitter:title', post.og_title || tBest('title'), true);
+        updateMetaTag('twitter:description', post.og_description || tBest('excerpt') || '', true);
         if (ogImage) {
             updateMetaTag('twitter:image', ogImage, true);
         }
@@ -52,8 +55,8 @@ export default function Show({ post, relatedPosts }: Props) {
         const structuredData = {
             "@context": "https://schema.org",
             "@type": "BlogPosting",
-            "headline": post.title,
-            "description": post.meta_description || post.excerpt,
+            "headline": tBest('title'),
+            "description": post.meta_description || tBest('excerpt'),
             "image": ogImage,
             "author": {
                 "@type": "Person",
@@ -65,7 +68,7 @@ export default function Show({ post, relatedPosts }: Props) {
                 "@type": "WebPage",
                 "@id": window.location.href
             },
-            "wordCount": post.body.split(' ').length,
+            "wordCount": tBest('body').split(' ').length,
             "timeRequired": `PT${post.reading_time_minutes}M`
         };
 
@@ -87,13 +90,13 @@ export default function Show({ post, relatedPosts }: Props) {
 
         return () => {
             // Cleanup function to reset title when component unmounts
-            document.title = 'Laravel';
+            document.title = tBest('title');
         };
     }, [post]);
 
     return (
         <>
-            <Head title={post.meta_title || post.title} />
+            <Head title={post.meta_title || tBest('title')} />
 
             <div className="min-h-screen bg-gray-50">
                 <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -114,7 +117,7 @@ export default function Show({ post, relatedPosts }: Props) {
                             </div>
                         )}
 
-                        <h1 className="text-4xl font-bold text-gray-900 mb-4">{post.title}</h1>
+                        <h1 className="text-4xl font-bold text-gray-900 mb-4">{tBest('title')}</h1>
 
                         <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-6">
                             <div className="flex items-center">
@@ -149,8 +152,8 @@ export default function Show({ post, relatedPosts }: Props) {
                             </div>
                         </div>
 
-                        {post.excerpt && (
-                            <p className="text-xl text-gray-600 leading-relaxed">{post.excerpt}</p>
+                        {tBest('excerpt') && (
+                            <p className="text-xl text-gray-600 leading-relaxed">{tBest('excerpt')}</p>
                         )}
                     </header>
 
@@ -159,7 +162,7 @@ export default function Show({ post, relatedPosts }: Props) {
                         <div className="mb-8">
                             <img
                                 src={`/storage/${post.featured_image}`}
-                                alt={post.title}
+                                alt={tBest('title')}
                                 className="w-full h-96 object-cover rounded-lg shadow-lg"
                             />
                         </div>
@@ -168,7 +171,7 @@ export default function Show({ post, relatedPosts }: Props) {
                     {/* Post Content */}
                     <div className="prose prose-lg max-w-none mb-12">
                         <div className="whitespace-pre-wrap text-gray-700 leading-relaxed">
-                            {post.body}
+                            {tBest('body')}
                         </div>
                     </div>
 
@@ -220,7 +223,7 @@ export default function Show({ post, relatedPosts }: Props) {
                                             <div className="aspect-w-16 aspect-h-9 mb-4">
                                                 <img
                                                     src={`/storage/${relatedPost.featured_image}`}
-                                                    alt={relatedPost.title}
+                                                    alt={useTranslation(relatedPost).tBest('title')}
                                                     className="w-full h-48 object-cover rounded-lg group-hover:opacity-90 transition-opacity"
                                                 />
                                             </div>
@@ -235,23 +238,23 @@ export default function Show({ post, relatedPosts }: Props) {
                                                         color: relatedPost.category.color,
                                                     }}
                                                 >
-                                                    {relatedPost.category.name}
+                                                    {useTranslation(relatedPost.category).tBest('name')}
                                                 </span>
                                             </div>
                                         )}
 
                                         <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-indigo-600 transition-colors">
-                                            <Link href={route('blog.show', relatedPost.slug)}>{relatedPost.title}</Link>
+                                            <Link href={route('blog.show', useTranslation(relatedPost).tBest('slug'))}>{useTranslation(relatedPost).tBest('title')}</Link>
                                         </h3>
 
-                                        {relatedPost.excerpt && (
+                                        {useTranslation(relatedPost).tBest('excerpt') && (
                                             <p className="text-gray-600 text-sm mb-3">
-                                                {relatedPost.excerpt.length > 100 ? `${relatedPost.excerpt.substring(0, 100)}...` : relatedPost.excerpt}
+                                                {useTranslation(relatedPost).tBest('excerpt').length > 100 ? `${useTranslation(relatedPost).tBest('excerpt').substring(0, 100)}...` : useTranslation(relatedPost).tBest('excerpt')}
                                             </p>
                                         )}
 
                                         <div className="flex items-center text-xs text-gray-500">
-                                            <span>{relatedPost.author.name}</span>
+                                            <span>{useTranslation(relatedPost).tBest('author.name')}</span>
                                             <span className="mx-1">•</span>
                                             <span>{new Date(relatedPost.published_at || relatedPost.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
                                             <span className="mx-1">•</span>
@@ -266,7 +269,7 @@ export default function Show({ post, relatedPosts }: Props) {
                     {/* Navigation */}
                     <div className="mt-12 pt-8 border-t border-gray-200">
                         <Link
-                            href={route('blog.index')}
+                            href={route('home')}
                             className="inline-flex items-center text-indigo-600 hover:text-indigo-500"
                         >
                             <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

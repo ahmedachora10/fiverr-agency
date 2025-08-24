@@ -5,6 +5,7 @@ import InputError from '@/components/input-error';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import TranslatableInput from '../translatable-input';
 
 interface Props {
   data: PostFormData;
@@ -32,6 +33,7 @@ export default function PostForm({
   const [activeTab, setActiveTab] = useState('content');
   const [metaTitleLength, setMetaTitleLength] = useState(0);
   const [metaDescLength, setMetaDescLength] = useState(0);
+  const locales = ['en', 'ar'];
 
   useEffect(() => {
     setMetaTitleLength(data.meta_title?.length || 0);
@@ -50,11 +52,22 @@ export default function PostForm({
       .trim();
   };
 
-  const handleTitleChange = (value: string) => {
-    setData('title', value);
+  const handleTitleChange = (value: string, locale: string) => {
+    handleTranslatableChange('title', locale, value);
     if (!data.slug) {
-      setData('slug', generateSlug(value));
+      handleTranslatableChange('slug', locale, generateSlug(value));
     }
+  };
+
+  const getTranslatableErrors = (field: string) => {
+    const fieldErrors: Record<string, string> = {};
+    locales.forEach(locale => {
+      const errorKey = `${field}.${locale}`;
+      if (errors[errorKey]) {
+        fieldErrors[locale] = errors[errorKey];
+      }
+    });
+    return fieldErrors;
   };
 
   const handleTagToggle = (tagId: number) => {
@@ -63,6 +76,19 @@ export default function PostForm({
       ? currentTags.filter(id => id !== tagId)
       : [...currentTags, tagId];
     setData('tags', newTags);
+  };
+
+
+  const handleTranslatableChange = (field: string, locale: string, value: string) => {
+    const currentValue = data[field as keyof typeof data] as Record<string, string> || {};
+    setData(field as any, {
+      ...currentValue,
+      [locale]: value
+    });
+
+    if (field === 'title') {
+      handleTitleChange(value, locale);
+    }
   };
 
   const tabs = [
@@ -86,11 +112,10 @@ export default function PostForm({
                     key={tab.id}
                     type="button"
                     onClick={() => setActiveTab(tab.id)}
-                    className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                      activeTab === tab.id
-                        ? 'border-indigo-500 text-indigo-600'
-                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                    }`}
+                    className={`py-4 px-1 border-b-2 font-medium text-sm ${activeTab === tab.id
+                      ? 'border-indigo-500 text-indigo-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                      }`}
                   >
                     <span className="mr-2">{tab.icon}</span>
                     {tab.name}
@@ -104,55 +129,56 @@ export default function PostForm({
               {activeTab === 'content' && (
                 <div className="space-y-6">
                   <div>
-                    <Label htmlFor="title">Title</Label>
-                    <Input
-                      id="title"
-                      type="text"
-                      className="mt-1 block w-full"
-                      value={data.title}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleTitleChange(e.target.value)}
+                    <TranslatableInput
+                      name="title"
+                      label="Title"
+                      value={data.title as Record<string, string>}
+                      error={getTranslatableErrors('title')}
+                      locales={locales}
                       required
+                      placeholder="Enter post title"
+                      onChange={handleTranslatableChange}
                     />
-                    <InputError message={errors.title} className="mt-2" />
                   </div>
 
                   <div>
-                    <Label htmlFor="slug">Slug</Label>
-                    <Input
-                      id="slug"
-                      type="text"
-                      className="mt-1 block w-full"
-                      value={data.slug || ''}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData('slug', e.target.value)}
+                    <TranslatableInput
+                      name="slug"
+                      label="Slug"
+                      value={data.slug as Record<string, string>}
+                      error={getTranslatableErrors('slug')}
+                      locales={locales}
+                      placeholder="auto-generated-from-title"
+                      onChange={handleTranslatableChange}
                     />
+
                     <p className="mt-1 text-sm text-gray-500">Leave empty to auto-generate from title</p>
                     <InputError message={errors.slug} className="mt-2" />
                   </div>
 
                   <div>
-                    <Label htmlFor="excerpt">Excerpt</Label>
-                    <textarea
-                      id="excerpt"
-                      rows={3}
-                      className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                      value={data.excerpt || ''}
-                      onChange={(e) => setData('excerpt', e.target.value)}
+                    <TranslatableInput
+                      name="excerpt"
+                      label="Excerpt"
+                      value={data.excerpt as Record<string, string>}
+                      error={getTranslatableErrors('excerpt')}
+                      locales={locales}
+                      onChange={handleTranslatableChange}
+                      type="textarea"
                     />
                     <p className="mt-1 text-sm text-gray-500">Leave empty to auto-generate from content</p>
-                    <InputError message={errors.excerpt} className="mt-2" />
                   </div>
 
                   <div>
-                    <Label htmlFor="body">Content</Label>
-                    <textarea
-                      id="body"
-                      rows={15}
-                      className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                      value={data.body}
-                      onChange={(e) => setData('body', e.target.value)}
-                      required
+                    <TranslatableInput
+                      name="body"
+                      label="Content"
+                      value={data.body as Record<string, string>}
+                      error={getTranslatableErrors('body')}
+                      locales={locales}
+                      onChange={handleTranslatableChange}
+                      type="textarea"
                     />
-                    <InputError message={errors.body} className="mt-2" />
                   </div>
                 </div>
               )}

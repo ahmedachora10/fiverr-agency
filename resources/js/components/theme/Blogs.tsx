@@ -6,6 +6,7 @@ import { Link } from "@inertiajs/react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { usePage } from "@inertiajs/react";
 import { BlogPost, Tag } from "@/types/blog";
+import { useTranslation } from "@/utils/translation";
 
 const Blogs = () => {
     const { t } = useLanguage();
@@ -37,14 +38,14 @@ const Blogs = () => {
                                     <div className="aspect-video bg-muted rounded-t-lg overflow-hidden">
                                         <img
                                             src={post.image}
-                                            alt={post.title}
+                                            alt={useTranslation(post).tBest('title')}
                                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                         />
                                     </div>
                                     <CardHeader className="pb-4">
                                         <div className="flex items-center gap-2 mb-3">
                                             <Badge variant="secondary" className="text-xs">
-                                                {post.category.name}
+                                                {useTranslation(post.category).tBest('name')}
                                             </Badge>
                                             <div className="flex items-center text-muted-foreground text-sm gap-4">
                                                 <div className="flex items-center gap-1">
@@ -58,10 +59,10 @@ const Blogs = () => {
                                             </div>
                                         </div>
                                         <CardTitle className="text-xl group-hover:text-primary transition-colors line-clamp-2">
-                                            {post.title}
+                                            {useTranslation(post).tBest('title')}
                                         </CardTitle>
                                         <CardDescription className="text-muted-foreground line-clamp-3">
-                                            {post.excerpt}
+                                            {useTranslation(post).tBest('excerpt')}
                                         </CardDescription>
                                     </CardHeader>
                                     <CardContent className="pt-0">
@@ -69,11 +70,11 @@ const Blogs = () => {
                                             <div className="flex flex-wrap gap-1">
                                                 {post.tags?.slice(0, 2).map((tag: Tag) => (
                                                     <Badge key={tag.id} variant="outline" className="text-xs">
-                                                        {tag.name}
+                                                        {useTranslation(tag).tBest('name')}
                                                     </Badge>
                                                 ))}
                                             </div>
-                                            <Link href={route('blog.show', post.slug)}>
+                                            <Link href={route('blog.show', useTranslation(post).tBest('slug'))}>
                                                 <Button variant="ghost" size="sm" className="group/btn">
                                                     {t('blog.readMore')}
                                                     <ArrowRight className="w-4 h-4 ml-1 group-hover/btn:translate-x-1 transition-transform" />

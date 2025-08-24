@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { Head, Link, router, usePage } from '@inertiajs/react';
+import { useState } from 'react';
+import { Head, Link, router } from '@inertiajs/react';
 import { Post, Category, PaginatedData, BlogFilters } from '@/types/blog';
 import AppLayout from '@/layouts/app-layout';
 import { Search, Plus, Eye, Edit, Trash2 } from 'lucide-react';
+import { useTranslation } from '@/utils/translation';
 
 interface Props {
   posts: PaginatedData<Post>;
@@ -15,8 +16,6 @@ export default function Index({ posts, categories, filters }: Props) {
   const [selectedCategory, setSelectedCategory] = useState(filters.category || '');
   const [selectedStatus, setSelectedStatus] = useState(filters.status || '');
 
-
-  console.log(posts);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -161,12 +160,12 @@ export default function Index({ posts, categories, filters }: Props) {
                               <img
                                 className="h-10 w-10 rounded object-cover mr-4"
                                 src={`/storage/${post.featured_image}`}
-                                alt={post.title}
+                                alt={useTranslation(post).tBest('title')}
                               />
                             )}
                             <div>
                               <div className="text-sm font-medium text-gray-900">
-                                {post.title}
+                                {useTranslation(post).tBest('title')}
                               </div>
                               <div className="text-sm text-gray-500">
                                 by {post.author.name}

@@ -4,6 +4,7 @@ import { Category, Tag, PostFormData } from '@/types/blog';
 import AppLayout from '@/layouts/app-layout';
 import PostForm from '@/components/Admin/PostForm';
 
+
 interface Props {
   categories: Category[];
   tags: Tag[];

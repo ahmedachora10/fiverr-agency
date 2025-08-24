@@ -3,7 +3,6 @@ import Hero from "@/components/theme/Hero";
 import ServicesGrid from "@/components/theme/ServicesGrid";
 import Benefits from "@/components/theme/Benefits";
 import HowItWorks from "@/components/theme/HowItWorks";
-import BlogCards from "@/components/theme/BlogCards";
 import Testimonials from "@/components/theme/Testimonials";
 import FAQ from "@/components/theme/FAQ";
 import FinalCTA from "@/components/theme/FinalCTA";
