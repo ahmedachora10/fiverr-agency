@@ -3,6 +3,7 @@
 use App\Models\Post;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Actions\SwitchLanguage;
 
 
 Route::get('/', function () {
@@ -10,6 +11,8 @@ Route::get('/', function () {
         'posts' => Post::with(['category', 'tags', 'author'])->take(6)->get(),
     ]);
 })->name('home');
+
+Route::get('/switch-language/{language}', SwitchLanguage::class)->name('switch-language');
 
 Route::middleware([
     'auth',

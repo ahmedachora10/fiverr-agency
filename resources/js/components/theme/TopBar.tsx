@@ -3,10 +3,12 @@ import { ChevronDown, Globe, Languages } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Language } from "@/contexts/LanguageContext";
 import { useEffect } from "react";
+import { router } from "@inertiajs/react";
 
 const TopBar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { language, setLanguage, isRTL, t } = useLanguage();
+  // const { get } = useForm();
 
   useEffect(() => {
     const savedLanguage = localStorage.getItem('language');
@@ -14,6 +16,24 @@ const TopBar = () => {
       setLanguage(savedLanguage as Language);
     }
   }, []);
+
+  const switchLanguage = (language: Language) => {
+    router.get(route('switch-language', { language }), {}, {
+      preserveState: true,
+      preserveScroll: true,
+      onSuccess: () => {
+        setLanguage(language);
+        setIsOpen(false);
+        localStorage.setItem('language', language);
+      },
+      onError: () => {
+        // Revert language on error
+        const previousLanguage = localStorage.getItem('language') || 'en';
+        setLanguage(previousLanguage as Language);
+      }
+    });
+
+  };
 
   return (
     <div className="bg-gradient-primary text-white py-2 px-4 text-sm">
@@ -37,21 +57,13 @@ const TopBar = () => {
               <div className={`absolute top-full ${isRTL ? 'left-0' : 'right-0'} mt-1 bg-white text-foreground shadow-lg rounded-lg py-2 min-w-[120px] z-50`}>
                 <div
                   className="px-3 py-1 hover:bg-gray-50 cursor-pointer"
-                  onClick={() => {
-                    setLanguage('en');
-                    setIsOpen(false);
-                    localStorage.setItem('language', 'en');
-                  }}
+                  onClick={() => switchLanguage('en')}
                 >
                   English
                 </div>
                 <div
                   className="px-3 py-1 hover:bg-gray-50 cursor-pointer"
-                  onClick={() => {
-                    setLanguage('ar');
-                    setIsOpen(false);
-                    localStorage.setItem('language', 'ar');
-                  }}
+                  onClick={() => switchLanguage('ar')}
                 >
                   العربية
                 </div>

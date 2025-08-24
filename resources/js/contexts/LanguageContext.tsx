@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import translations from '@/lang/lang.json';
+import { usePage } from '@inertiajs/react';
 
 type Language = 'en' | 'ar';
 
@@ -17,9 +18,11 @@ interface LanguageProviderProps {
 }
 
 export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) => {
+    const { locale } = usePage().props;
     const [language, setLanguage] = useState<Language>(() => {
+
         if (typeof window !== 'undefined') {
-            return (localStorage.getItem('language') as Language) || 'en';
+            return (localStorage.getItem('language') as Language) || locale || 'en';
         }
         return 'en';
     });
