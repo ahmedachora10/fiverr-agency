@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Str;
+use Spatie\Translatable\HasTranslations;
 
 class Post extends Model
 {
-    use HasFactory;
+    use HasFactory, HasTranslations;
 
     protected $fillable = [
         'title',
@@ -33,6 +34,8 @@ class Post extends Model
         'reading_time_minutes',
     ];
 
+    public $translatable = ['title', 'slug', 'excerpt', 'body'];
+
     protected $casts = [
         'published_at' => 'datetime',
         'no_index' => 'boolean',
@@ -45,35 +48,58 @@ class Post extends Model
         parent::boot();
 
         static::creating(function (Post $post) {
-            if (empty($post->slug)) {
-                $post->slug = Str::slug($post->title);
+            $currentLocale = app()->getLocale();
+            
+            if (empty($post->getTranslation('slug', $currentLocale))) {
+                $title = $post->getTranslation('title', $currentLocale);
+                if ($title) {
+                    $post->setTranslation('slug', $currentLocale, Str::slug($title));
+                }
             }
 
             if (empty($post->reading_time_minutes)) {
-                $post->reading_time_minutes = self::calculateReadingTime($post->body);
+                $body = $post->getTranslation('body', $currentLocale);
+                if ($body) {
+                    $post->reading_time_minutes = self::calculateReadingTime($body);
+                }
             }
 
-            if (empty($post->excerpt)) {
-                $post->excerpt = Str::limit(strip_tags($post->body), 160);
+            if (empty($post->getTranslation('excerpt', $currentLocale))) {
+                $body = $post->getTranslation('body', $currentLocale);
+                if ($body) {
+                    $post->setTranslation('excerpt', $currentLocale, Str::limit(strip_tags($body), 160));
+                }
             }
         });
 
         static::updating(function (Post $post) {
-            if ($post->isDirty('title') && empty($post->slug)) {
-                $post->slug = Str::slug($post->title);
+            $currentLocale = app()->getLocale();
+            
+            if ($post->isDirty('title') && empty($post->getTranslation('slug', $currentLocale))) {
+                $title = $post->getTranslation('title', $currentLocale);
+                if ($title) {
+                    $post->setTranslation('slug', $currentLocale, Str::slug($title));
+                }
             }
 
             if ($post->isDirty('body')) {
-                $post->reading_time_minutes = self::calculateReadingTime($post->body);
-                
-                if (empty($post->excerpt)) {
-                    $post->excerpt = Str::limit(strip_tags($post->body), 160);
+                $body = $post->getTranslation('body', $currentLocale);
+                if ($body) {
+                    $post->reading_time_minutes = self::calculateReadingTime($body);
+                    
+                    if (empty($post->getTranslation('excerpt', $currentLocale))) {
+                        $post->setTranslation('excerpt', $currentLocale, Str::limit(strip_tags($body), 160));
+                    }
                 }
             }
         });
 
         static::retrieved(function (Post $post) {
             $post->image = asset($post->featured_image);
+            $post->title = $post->getTranslation('title', app()->getLocale());
+            $post->slug = $post->getTranslation('slug', app()->getLocale());
+            $post->excerpt = $post->getTranslation('excerpt', app()->getLocale());
+            $post->body = $post->getTranslation('body', app()->getLocale());
         });
     }
 

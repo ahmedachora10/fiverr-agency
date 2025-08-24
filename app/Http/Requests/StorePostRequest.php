@@ -14,10 +14,10 @@ class StorePostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|string|max:255',
-            'slug' => 'nullable|string|max:255|unique:posts,slug',
-            'excerpt' => 'nullable|string',
-            'body' => 'required|string',
+            'title' => 'required|array|max:255',
+            'slug' => 'nullable|array|max:255|unique:posts,slug',
+            'excerpt' => 'nullable|array',
+            'body' => 'required|array',
             'category_id' => 'nullable|exists:categories,id',
             'status' => 'required|in:draft,scheduled,published,archived',
             'published_at' => 'nullable|date',
@@ -38,9 +38,9 @@ class StorePostRequest extends FormRequest
     {
         return [
             'title.required' => 'The post title is required.',
-            'title.max' => 'The post title may not be greater than 255 characters.',
-            'slug.unique' => 'This slug is already taken.',
-            'body.required' => 'The post content is required.',
+            'title.*.max' => 'The post title may not be greater than 255 characters.',
+            'slug.*.unique' => 'This slug is already taken.',
+            'body.*.required' => 'The post content is required.',
             'category_id.exists' => 'The selected category is invalid.',
             'status.required' => 'The post status is required.',
             'status.in' => 'The post status must be one of: draft, scheduled, published, archived.',
