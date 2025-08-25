@@ -102,7 +102,7 @@ class Post extends Model
         });
 
         static::retrieved(function (Post $post) {
-            if(!request()->isMethod('PUT') && !request()->isMethod('POST')) {
+            if(!request()->isMethod('PUT')) {
                 $post->image = asset($post->featured_image);
             }
             // Don't override translatable fields - let spatie/laravel-translatable handle them
