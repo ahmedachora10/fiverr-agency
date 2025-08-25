@@ -37,7 +37,7 @@ const Blogs = () => {
                                 <Card key={post.id} className="group hover:shadow-lg transition-all duration-300 border-muted">
                                     <div className="aspect-video bg-muted rounded-t-lg overflow-hidden">
                                         <img
-                                            src={post.featured_image}
+                                            src={`/storage/${post.featured_image}`}
                                             alt={useTranslation(post).tBest('title')}
                                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                         />
