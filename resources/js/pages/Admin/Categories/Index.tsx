@@ -3,6 +3,7 @@ import { Head, Link, router } from '@inertiajs/react';
 import { Category, PaginatedData } from '@/types/blog';
 import { Search, Plus, Edit, Eye, Trash2, FolderOpen } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
+import { useTranslation } from '@/utils/translation';
 
 
 interface Props {
@@ -29,7 +30,7 @@ export default function Index({ categories, filters }: Props) {
     };
 
     const handleDelete = (category: Category) => {
-        if (confirm(`Are you sure you want to delete "${category.name}"?`)) {
+        if (confirm(`Are you sure you want to delete "${useTranslation(category).tBest('name')}"?`)) {
             router.delete(route('admin.categories.destroy', category.id));
         }
     };
@@ -117,76 +118,79 @@ export default function Index({ categories, filters }: Props) {
                                         </tr>
                                     </thead>
                                     <tbody className="bg-white divide-y divide-gray-200">
-                                        {categories.data.map((category) => (
-                                            <tr key={category.id} className="hover:bg-gray-50">
-                                                <td className="px-6 py-4 whitespace-nowrap">
-                                                    <div className="flex items-center">
-                                                        <div
-                                                            className="w-4 h-4 rounded-full mr-3"
-                                                            style={{ backgroundColor: category.color }}
-                                                        ></div>
-                                                        <div>
-                                                            <div className="text-sm font-medium text-gray-900">
-                                                                {category.name}
-                                                            </div>
-                                                            <div className="text-sm text-gray-500">
-                                                                /{category.slug}
+                                        {categories.data.map((category) => {
+                                            const { tBest } = useTranslation(category);
+                                            return (
+                                                <tr key={category.id} className="hover:bg-gray-50">
+                                                    <td className="px-6 py-4 whitespace-nowrap">
+                                                        <div className="flex items-center">
+                                                            <div
+                                                                className="w-4 h-4 rounded-full mr-3"
+                                                                style={{ backgroundColor: category.color }}
+                                                            ></div>
+                                                            <div>
+                                                                <div className="text-sm font-medium text-gray-900">
+                                                                    {tBest('name')}
+                                                                </div>
+                                                                <div className="text-sm text-gray-500">
+                                                                    /{tBest('slug')}
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                </td>
-                                                <td className="px-6 py-4 whitespace-nowrap">
-                                                    <div className="flex items-center">
-                                                        <FolderOpen className="h-4 w-4 text-gray-400 mr-1" />
-                                                        <span className="text-sm text-gray-900">
-                                                            {category.posts_count}
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">
+                                                        <div className="flex items-center">
+                                                            <FolderOpen className="h-4 w-4 text-gray-400 mr-1" />
+                                                            <span className="text-sm text-gray-900">
+                                                                {category.posts_count}
+                                                            </span>
+                                                        </div>
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">
+                                                        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${category.is_active
+                                                            ? 'bg-green-100 text-green-800'
+                                                            : 'bg-red-100 text-red-800'
+                                                            }`}>
+                                                            {category.is_active ? 'Active' : 'Inactive'}
                                                         </span>
-                                                    </div>
-                                                </td>
-                                                <td className="px-6 py-4 whitespace-nowrap">
-                                                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${category.is_active
-                                                        ? 'bg-green-100 text-green-800'
-                                                        : 'bg-red-100 text-red-800'
-                                                        }`}>
-                                                        {category.is_active ? 'Active' : 'Inactive'}
-                                                    </span>
-                                                </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                    {new Date(category.created_at).toLocaleDateString()}
-                                                </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                    <div className="flex items-center justify-end space-x-2">
-                                                        <Link
-                                                            href={route('admin.categories.show', category.id)}
-                                                            className="text-indigo-600 hover:text-indigo-900"
-                                                            onClick={(e) => {
-                                                                console.log('Show clicked:', category.id, route('admin.categories.show', category.id));
-                                                            }}
-                                                        >
-                                                            <Eye className="h-4 w-4" />
-                                                        </Link>
-                                                        <Link
-                                                            href={route('admin.categories.edit', category.id)}
-                                                            className="text-gray-600 hover:text-gray-900"
-                                                            onClick={(e) => {
-                                                                console.log('Edit clicked:', category.id, route('admin.categories.edit', category.id));
-                                                            }}
-                                                        >
-                                                            <Edit className="h-4 w-4" />
-                                                        </Link>
-                                                        <button
-                                                            onClick={() => {
-                                                                console.log('Delete clicked:', category.id);
-                                                                handleDelete(category);
-                                                            }}
-                                                            className="text-red-600 hover:text-red-900"
-                                                        >
-                                                            <Trash2 className="h-4 w-4" />
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        ))}
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                        {new Date(category.created_at).toLocaleDateString()}
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                                        <div className="flex items-center justify-end space-x-2">
+                                                            <Link
+                                                                href={route('admin.categories.show', category.id)}
+                                                                className="text-indigo-600 hover:text-indigo-900"
+                                                                onClick={(e) => {
+                                                                    console.log('Show clicked:', category.id, route('admin.categories.show', category.id));
+                                                                }}
+                                                            >
+                                                                <Eye className="h-4 w-4" />
+                                                            </Link>
+                                                            <Link
+                                                                href={route('admin.categories.edit', category.id)}
+                                                                className="text-gray-600 hover:text-gray-900"
+                                                                onClick={(e) => {
+                                                                    console.log('Edit clicked:', category.id, route('admin.categories.edit', category.id));
+                                                                }}
+                                                            >
+                                                                <Edit className="h-4 w-4" />
+                                                            </Link>
+                                                            <button
+                                                                onClick={() => {
+                                                                    console.log('Delete clicked:', category.id);
+                                                                    handleDelete(category);
+                                                                }}
+                                                                className="text-red-600 hover:text-red-900"
+                                                            >
+                                                                <Trash2 className="h-4 w-4" />
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
                                     </tbody>
                                 </table>
                             </div>

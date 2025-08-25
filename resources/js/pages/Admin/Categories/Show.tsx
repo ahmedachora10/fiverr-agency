@@ -3,6 +3,7 @@ import { Head, Link, router } from '@inertiajs/react';
 import { Category } from '@/types/blog';
 import { ArrowLeft, Edit, Trash2, FolderOpen, Calendar, Globe } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
+import { useTranslation } from '@/utils/translation';
 
 interface Props {
     category: Category & { posts_count: number };
@@ -10,14 +11,16 @@ interface Props {
 
 export default function Show({ category }: Props) {
     const handleDelete = () => {
-        if (confirm(`Are you sure you want to delete "${category.name}"?`)) {
+        if (confirm(`Are you sure you want to delete "${tBest('name')}"?`)) {
             router.delete(route('admin.categories.destroy', category.id));
         }
     };
 
+    const { tBest } = useTranslation(category);
+
     return (
         <AppLayout>
-            <Head title={category.name} />
+            <Head title={tBest('name')} />
 
             <div className="space-y-6 container mx-auto p-6">
                 {/* Header */}
@@ -35,7 +38,7 @@ export default function Show({ category }: Props) {
                                     className="w-6 h-6 rounded-full mr-3"
                                     style={{ backgroundColor: category.color }}
                                 ></div>
-                                {category.name}
+                                {tBest('name')}
                             </h1>
                             <p className="mt-1 text-sm text-gray-600">
                                 Category details and information
@@ -80,11 +83,11 @@ export default function Show({ category }: Props) {
                             <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                                 <div>
                                     <dt className="text-sm font-medium text-gray-500">Name</dt>
-                                    <dd className="mt-1 text-sm text-gray-900">{category.name}</dd>
+                                    <dd className="mt-1 text-sm text-gray-900">{tBest('name')}</dd>
                                 </div>
                                 <div>
                                     <dt className="text-sm font-medium text-gray-500">Slug</dt>
-                                    <dd className="mt-1 text-sm text-gray-900 font-mono">/{category.slug}</dd>
+                                    <dd className="mt-1 text-sm text-gray-900 font-mono">/{tBest('slug')}</dd>
                                 </div>
                                 <div>
                                     <dt className="text-sm font-medium text-gray-500">Color</dt>
@@ -105,10 +108,10 @@ export default function Show({ category }: Props) {
                                 </div>
                             </dl>
 
-                            {category.description && (
+                            {tBest('description') && (
                                 <div className="mt-6">
                                     <dt className="text-sm font-medium text-gray-500">Description</dt>
-                                    <dd className="mt-1 text-sm text-gray-900">{category.description}</dd>
+                                    <dd className="mt-1 text-sm text-gray-900">{tBest('description')}</dd>
                                 </div>
                             )}
                         </div>
@@ -197,14 +200,14 @@ export default function Show({ category }: Props) {
                             <h3 className="text-lg font-medium text-gray-900 mb-4">Quick Actions</h3>
                             <div className="space-y-3">
                                 <Link
-                                    href={route('blog.category', category.slug)}
+                                    href={route('blog.category', tBest('slug'))}
                                     className="block w-full text-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
                                     target="_blank"
                                 >
                                     View on Site
                                 </Link>
                                 <Link
-                                    href={route('admin.posts.index', { category: category.slug })}
+                                    href={route('admin.posts.index', { category: category.id })}
                                     className="block w-full text-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
                                 >
                                     View Posts

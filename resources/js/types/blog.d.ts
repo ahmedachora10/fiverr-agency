@@ -6,9 +6,9 @@ export interface User {
 
 export interface Category {
   id: number;
-  name: string;
-  slug: string;
-  description?: string;
+  name: Record<string, string>;
+  slug: Record<string, string>;
+  description?: Record<string, string>;
   color: string;
   meta_title?: string;
   meta_description?: string;
