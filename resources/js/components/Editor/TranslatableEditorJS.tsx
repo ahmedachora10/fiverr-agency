@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import RichTextEditor from './EditorJS';
+import QuillEditor from './EditorJS';
 import { Label } from '@/components/ui/label';
 import InputError from '@/components/input-error';
 
-interface TranslatableRichTextEditorProps {
+interface TranslatableQuillEditorProps {
   name: string;
   label: string;
   value: Record<string, string>;
@@ -15,7 +15,7 @@ interface TranslatableRichTextEditorProps {
   className?: string;
 }
 
-const TranslatableRichTextEditor: React.FC<TranslatableRichTextEditorProps> = ({
+const TranslatableQuillEditor: React.FC<TranslatableQuillEditorProps> = ({
   name,
   label,
   value,
@@ -72,7 +72,7 @@ const TranslatableRichTextEditor: React.FC<TranslatableRichTextEditorProps> = ({
 
       {/* Editor for Active Locale */}
       <div className="space-y-4">
-        <RichTextEditor
+        <QuillEditor
           key={`${name}-${activeLocale}`}
           data={getValidContent(value[activeLocale])}
           onChange={handleEditorChange}
@@ -117,4 +117,4 @@ const TranslatableRichTextEditor: React.FC<TranslatableRichTextEditorProps> = ({
   );
 };
 
-export default TranslatableRichTextEditor;
+export default TranslatableQuillEditor;

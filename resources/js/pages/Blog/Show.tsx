@@ -3,8 +3,7 @@ import { Head, Link } from '@inertiajs/react';
 import { Post } from '@/types/blog';
 import { ClockIcon, EyeIcon, CalendarIcon, ArrowLeft } from 'lucide-react';
 import { useTranslation } from '@/utils/translation';
-import EditorJSRenderer from '@/components/Editor/EditorJSRenderer';
-import MarkdownRenderer from '@/components/Editor/EditorJSRenderer';
+import QuillRenderer from '@/components/Editor/EditorJSRenderer';
 
 
 interface Props {
@@ -180,7 +179,7 @@ export default function Show({ post, relatedPosts }: Props) {
 
                     {/* Post Content */}
                     <div className="mb-12">
-                        <EditorJSRenderer
+                        <QuillRenderer
                             content={tBest('body')}
                             className="prose prose-lg max-w-none"
                         />

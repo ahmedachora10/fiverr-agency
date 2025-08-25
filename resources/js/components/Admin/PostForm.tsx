@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import TranslatableInput from '../translatable-input';
-import TranslatableRichTextEditor from '@/components/Editor/TranslatableEditorJS';
+import TranslatableQuillEditor from '@/components/Editor/TranslatableEditorJS';
 import { useTranslation } from '@/utils/translation';
 
 interface Props {
@@ -185,7 +185,7 @@ export default function PostForm({
                   </div>
 
                   <div>
-                    <TranslatableRichTextEditor
+                    <TranslatableQuillEditor
                       name="body"
                       label="Content"
                       value={data.body as Record<string, string>}
