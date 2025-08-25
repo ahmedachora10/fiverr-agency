@@ -20,7 +20,6 @@ export default function Edit({ category }: Props) {
         meta_description: category.meta_description || '',
     });
 
-    console.log(category);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();

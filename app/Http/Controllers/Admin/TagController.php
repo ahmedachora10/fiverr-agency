@@ -14,7 +14,12 @@ class TagController extends Controller
     public function index(Request $request)
     {
         $tags = Tag::withCount('posts')
-            ->when($request->search, fn($q) => $q->where('name', 'like', "%{$request->search}%"))
+            ->when($request->search, function($q) use ($request) {
+                $q->where(function($query) use ($request) {
+                    $query->where('name->en', 'like', "%{$request->search}%")
+                          ->orWhere('name->ar', 'like', "%{$request->search}%");
+                });
+            })
             ->latest()
             ->paginate(8);
 

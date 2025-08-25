@@ -1,23 +1,26 @@
 import React from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import { Tag } from '@/types/blog';
-import { ArrowLeft, Edit, Trash2, Tag as TagIcon, Calendar, Globe } from 'lucide-react';
+import { ArrowLeft, Edit, Trash2, Tag as TagIcon, Calendar, Globe, Languages } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
+import { useTranslation } from '@/utils/translation';
 
 interface Props {
     tag: Tag & { posts_count: number };
 }
 
 export default function Show({ tag }: Props) {
+    const { tBest, t, currentLocale } = useTranslation(tag);
+
     const handleDelete = () => {
-        if (confirm(`Are you sure you want to delete "${tag.name}"?`)) {
+        if (confirm(`Are you sure you want to delete "${tBest('name')}"?`)) {
             router.delete(route('admin.tags.destroy', tag.id));
         }
     };
 
     return (
         <AppLayout>
-            <Head title={tag.name} />
+            <Head title={tBest('name') || 'Tag'} />
 
             <div className="space-y-6 container mx-auto p-6">
                 {/* Header */}
@@ -35,7 +38,7 @@ export default function Show({ tag }: Props) {
                                     className="w-6 h-6 rounded-full mr-3"
                                     style={{ backgroundColor: tag.color }}
                                 ></div>
-                                #{tag.name}
+                                #{tBest('name')}
                             </h1>
                             <p className="mt-1 text-sm text-gray-600">
                                 Tag details and information
@@ -64,17 +67,68 @@ export default function Show({ tag }: Props) {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {/* Tag Information */}
                     <div className="lg:col-span-2 space-y-6">
+                        {/* Language Switcher */}
+                        <div className="bg-white shadow rounded-lg p-6">
+                            <h2 className="text-lg font-medium text-gray-900 mb-4 flex items-center">
+                                <Languages className="h-5 w-5 mr-2" />
+                                Translations
+                            </h2>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {/* English Content */}
+                                <div className="space-y-4">
+                                    <h3 className="text-sm font-medium text-gray-700 border-b pb-2">English (EN)</h3>
+                                    <div className="space-y-3">
+                                        <div>
+                                            <dt className="text-xs font-medium text-gray-500">Name</dt>
+                                            <dd className="mt-1 text-sm text-gray-900">#{t('name', 'en') || 'Not set'}</dd>
+                                        </div>
+                                        <div>
+                                            <dt className="text-xs font-medium text-gray-500">Slug</dt>
+                                            <dd className="mt-1 text-sm text-gray-900 font-mono">/{t('slug', 'en') || 'not-set'}</dd>
+                                        </div>
+                                        {t('description', 'en') && (
+                                            <div>
+                                                <dt className="text-xs font-medium text-gray-500">Description</dt>
+                                                <dd className="mt-1 text-sm text-gray-900">{t('description', 'en')}</dd>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* Arabic Content */}
+                                <div className="space-y-4">
+                                    <h3 className="text-sm font-medium text-gray-700 border-b pb-2">العربية (AR)</h3>
+                                    <div className="space-y-3">
+                                        <div>
+                                            <dt className="text-xs font-medium text-gray-500">Name</dt>
+                                            <dd className="mt-1 text-sm text-gray-900 text-right">#{t('name', 'ar') || 'غير محدد'}</dd>
+                                        </div>
+                                        <div>
+                                            <dt className="text-xs font-medium text-gray-500">Slug</dt>
+                                            <dd className="mt-1 text-sm text-gray-900 font-mono text-right">/{t('slug', 'ar') || 'غير-محدد'}</dd>
+                                        </div>
+                                        {t('description', 'ar') && (
+                                            <div>
+                                                <dt className="text-xs font-medium text-gray-500">Description</dt>
+                                                <dd className="mt-1 text-sm text-gray-900 text-right">{t('description', 'ar')}</dd>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         {/* Basic Information */}
                         <div className="bg-white shadow rounded-lg p-6">
-                            <h2 className="text-lg font-medium text-gray-900 mb-4">Basic Information</h2>
+                            <h2 className="text-lg font-medium text-gray-900 mb-4">Current Display ({currentLocale.toUpperCase()})</h2>
                             <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                                 <div>
                                     <dt className="text-sm font-medium text-gray-500">Name</dt>
-                                    <dd className="mt-1 text-sm text-gray-900">#{tag.name}</dd>
+                                    <dd className="mt-1 text-sm text-gray-900">#{tBest('name')}</dd>
                                 </div>
                                 <div>
                                     <dt className="text-sm font-medium text-gray-500">Slug</dt>
-                                    <dd className="mt-1 text-sm text-gray-900 font-mono">/{tag.slug}</dd>
+                                    <dd className="mt-1 text-sm text-gray-900 font-mono">/{tBest('slug')}</dd>
                                 </div>
                                 <div>
                                     <dt className="text-sm font-medium text-gray-500">Color</dt>
@@ -95,10 +149,10 @@ export default function Show({ tag }: Props) {
                                 </div>
                             </dl>
 
-                            {tag.description && (
+                            {tBest('description') && (
                                 <div className="mt-6">
                                     <dt className="text-sm font-medium text-gray-500">Description</dt>
-                                    <dd className="mt-1 text-sm text-gray-900">{tag.description}</dd>
+                                    <dd className="mt-1 text-sm text-gray-900">{tBest('description')}</dd>
                                 </div>
                             )}
                         </div>
@@ -180,14 +234,14 @@ export default function Show({ tag }: Props) {
                             <h3 className="text-lg font-medium text-gray-900 mb-4">Quick Actions</h3>
                             <div className="space-y-3">
                                 <Link
-                                    href={route('blog.tag', tag.slug)}
+                                    href={route('blog.tag', tBest('slug'))}
                                     className="block w-full text-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
                                     target="_blank"
                                 >
                                     View on Site
                                 </Link>
                                 <Link
-                                    href={route('admin.posts.index', { search: `#${tag.name}` })}
+                                    href={route('admin.posts.index', { search: `#${tBest('name')}` })}
                                     className="block w-full text-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
                                 >
                                     View Posts

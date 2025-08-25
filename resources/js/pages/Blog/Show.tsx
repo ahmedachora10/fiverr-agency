@@ -1,8 +1,10 @@
-import React, { useEffect, useTransition } from 'react';
+import React, { useEffect } from 'react';
 import { Head, Link } from '@inertiajs/react';
 import { Post } from '@/types/blog';
-import { ClockIcon, EyeIcon, CalendarIcon, UserIcon } from 'lucide-react';
+import { ClockIcon, EyeIcon, CalendarIcon, ArrowLeft } from 'lucide-react';
 import { useTranslation } from '@/utils/translation';
+import EditorJSRenderer from '@/components/Editor/EditorJSRenderer';
+import MarkdownRenderer from '@/components/Editor/EditorJSRenderer';
 
 
 interface Props {
@@ -73,11 +75,11 @@ export default function Show({ post, relatedPosts }: Props) {
         };
 
         if (post.category) {
-            structuredData["articleSection"] = post.category.name;
+            structuredData["articleSection"] = useTranslation(post.category).tBest('name');
         }
 
         if (post.tags.length > 0) {
-            structuredData["keywords"] = post.tags.map(tag => tag.name).join(', ');
+            structuredData["keywords"] = post.tags.map(tag => useTranslation(tag).tBest('name')).join(', ');
         }
 
         let structuredDataScript = document.querySelector('script[type="application/ld+json"]');
@@ -100,19 +102,27 @@ export default function Show({ post, relatedPosts }: Props) {
 
             <div className="min-h-screen bg-gray-50">
                 <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                    {/* Navigation */}
+                    <div className="mb-12 pt-8 border-b border-gray-200">
+                        <Link href="/" className="inline-flex items-center text-black-400 hover:text-primary/80 mb-8 transition-colors">
+                            <ArrowLeft className="w-4 h-4 mr-2" />
+                            Back to Home
+                        </Link>
+
+                    </div>
                     {/* Post Header */}
                     <header className="mb-8">
                         {post.category && (
                             <div className="mb-4">
                                 <Link
-                                    href={route('blog.category', post.category.slug)}
+                                    href={route('blog.category', useTranslation(post.category).tBest('slug'))}
                                     className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium hover:opacity-80 transition-opacity"
                                     style={{
                                         backgroundColor: `${post.category.color}20`,
                                         color: post.category.color,
                                     }}
                                 >
-                                    {post.category.name}
+                                    {useTranslation(post.category).tBest('name')}
                                 </Link>
                             </div>
                         )}
@@ -121,9 +131,9 @@ export default function Show({ post, relatedPosts }: Props) {
 
                         <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-6">
                             <div className="flex items-center">
-                                <UserIcon className="h-4 w-4 mr-1" />
+                                {/* <UserIcon className="h-4 w-4 mr-1" /> */}
                                 <img
-                                    className="h-8 w-8 rounded-full mr-3"
+                                    className="h-6 w-6 rounded-full mr-3"
                                     src={`https://ui-avatars.com/api/?name=${encodeURIComponent(post.author.name)}&background=6366f1&color=fff`}
                                     alt={post.author.name}
                                 />
@@ -169,10 +179,11 @@ export default function Show({ post, relatedPosts }: Props) {
                     )}
 
                     {/* Post Content */}
-                    <div className="prose prose-lg max-w-none mb-12">
-                        <div className="whitespace-pre-wrap text-gray-700 leading-relaxed">
-                            {tBest('body')}
-                        </div>
+                    <div className="mb-12">
+                        <EditorJSRenderer
+                            content={tBest('body')}
+                            className="prose prose-lg max-w-none"
+                        />
                     </div>
 
                     {/* Tags */}
@@ -183,14 +194,14 @@ export default function Show({ post, relatedPosts }: Props) {
                                 {post.tags.map((tag) => (
                                     <Link
                                         key={tag.id}
-                                        href={route('blog.tag', tag.slug)}
+                                        href={route('blog.tag', useTranslation(tag).tBest('slug'))}
                                         className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium hover:opacity-80 transition-opacity"
                                         style={{
                                             backgroundColor: `${tag.color}20`,
                                             color: tag.color,
                                         }}
                                     >
-                                        #{tag.name}
+                                        #{useTranslation(tag).tBest('name')}
                                     </Link>
                                 ))}
                             </div>
@@ -254,7 +265,7 @@ export default function Show({ post, relatedPosts }: Props) {
                                         )}
 
                                         <div className="flex items-center text-xs text-gray-500">
-                                            <span>{useTranslation(relatedPost).tBest('author.name')}</span>
+                                            <span>{relatedPost.author.name}</span>
                                             <span className="mx-1">•</span>
                                             <span>{new Date(relatedPost.published_at || relatedPost.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
                                             <span className="mx-1">•</span>
@@ -265,19 +276,6 @@ export default function Show({ post, relatedPosts }: Props) {
                             </div>
                         </div>
                     )}
-
-                    {/* Navigation */}
-                    <div className="mt-12 pt-8 border-t border-gray-200">
-                        <Link
-                            href={route('home')}
-                            className="inline-flex items-center text-indigo-600 hover:text-indigo-500"
-                        >
-                            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                            </svg>
-                            Back to Blog
-                        </Link>
-                    </div>
                 </article>
             </div>
         </>

@@ -23,14 +23,25 @@ class UpdateTagRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'slug' => [
+            'name' => 'required|array',
+            'name.en' => 'required|string|max:255',
+            'name.ar' => 'nullable|string|max:255',
+            'slug' => 'required|array',
+            'slug.en' => [
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('tags', 'slug')->ignore($this->tag->id),
+                Rule::unique('tags', 'slug->en')->ignore($this->tag->id),
             ],
-            'description' => 'nullable|string',
+            'slug.ar' => [
+                'nullable',
+                'string',
+                'max:255',
+                Rule::unique('tags', 'slug->ar')->ignore($this->tag->id),
+            ],
+            'description' => 'nullable|array',
+            'description.en' => 'nullable|string',
+            'description.ar' => 'nullable|string',
             'color' => 'required|string|max:7|regex:/^#[0-9A-Fa-f]{6}$/',
             'meta_title' => 'nullable|string|max:60',
             'meta_description' => 'nullable|string|max:160',

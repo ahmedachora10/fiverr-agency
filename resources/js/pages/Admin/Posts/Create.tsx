@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Head, useForm } from '@inertiajs/react';
 import { Category, Tag, PostFormData } from '@/types/blog';
 import AppLayout from '@/layouts/app-layout';
@@ -11,11 +11,11 @@ interface Props {
 }
 
 export default function Create({ categories, tags }: Props) {
-  const { data, setData, post, processing, errors, reset } = useForm<PostFormData>({
-    title: '',
-    slug: '',
-    excerpt: '',
-    body: '',
+  const { data, setData, post, processing, errors } = useForm<PostFormData>({
+    title: { en: '', ar: '' },
+    slug: { en: '', ar: '' },
+    excerpt: { en: '', ar: '' },
+    body: { en: '', ar: '' },
     category_id: undefined,
     status: 'draft',
     published_at: '',

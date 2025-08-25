@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 use Spatie\Translatable\HasTranslations;
+use App\Traits\Slugable;
 
 class Category extends Model
 {
-    use HasFactory, HasTranslations;
+    use HasFactory, HasTranslations, Slugable;
 
     protected $fillable = [
         'name',
@@ -76,27 +77,7 @@ class Category extends Model
         return $query->where('is_active', true);
     }
 
-    public function scopeBySlug($query, $slug)
-    {
-        return $query->where(function ($q) use ($slug) {
-            $q->where('slug->en', $slug)
-              ->orWhere('slug->ar', $slug);
-        });
-    }
-
-    /**
-     * Retrieve the model for a bound value.
-     */
-    public function resolveRouteBinding($value, $field = null)
-    {
-        // If field is specified and it's 'slug', handle JSON slug lookup
-        if ($field === 'slug') {
-            return $this->bySlug($value)->first();
-        }
-
-        // Default behavior for other fields
-        return parent::resolveRouteBinding($value, $field);
-    }
+    
 
     public function getMetaTitleAttribute(): ?string
     {
@@ -106,23 +87,5 @@ class Category extends Model
     public function getMetaDescriptionAttribute(): ?string
     {
         return $this->attributes['meta_description'] ?? $this->description;
-    }
-
-    /**
-     * Generate a unique slug for the category
-     */
-    private static function generateUniqueSlug(string $baseSlug, ?int $excludeId = null): string
-    {
-        $slug = $baseSlug;
-        $counter = 1;
-
-        while (static::bySlug($slug)->when($excludeId, function ($query, $excludeId) {
-            return $query->where('id', '!=', $excludeId);
-        })->exists()) {
-            $slug = $baseSlug . '-' . $counter;
-            $counter++;
-        }
-
-        return $slug;
     }
 }

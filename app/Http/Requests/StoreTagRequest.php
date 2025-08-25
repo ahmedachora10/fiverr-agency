@@ -22,9 +22,15 @@ class StoreTagRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:tags,slug',
-            'description' => 'nullable|string',
+            'name' => 'required|array',
+            'name.en' => 'required|string|max:255',
+            'name.ar' => 'nullable|string|max:255',
+            'slug' => 'required|array',
+            'slug.en' => 'required|string|max:255|unique:tags,slug->en',
+            'slug.ar' => 'nullable|string|max:255|unique:tags,slug->ar',
+            'description' => 'nullable|array',
+            'description.en' => 'nullable|string',
+            'description.ar' => 'nullable|string',
             'color' => 'required|string|max:7|regex:/^#[0-9A-Fa-f]{6}$/',
             'meta_title' => 'nullable|string|max:60',
             'meta_description' => 'nullable|string|max:160',

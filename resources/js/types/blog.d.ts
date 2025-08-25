@@ -20,9 +20,9 @@ export interface Category {
 
 export interface Tag {
   id: number;
-  name: string;
-  slug: string;
-  description?: string;
+  name: Record<string, string>;
+  slug: Record<string, string>;
+  description?: Record<string, string>;
   color: string;
   meta_title?: string;
   meta_description?: string;
@@ -73,10 +73,10 @@ export interface Post {
 }
 
 export interface PostFormData {
-  title: string;
-  slug?: string;
-  excerpt?: string;
-  body: string;
+  title: Record<string, string>;
+  slug: Record<string, string>;
+  excerpt: Record<string, string>;
+  body: Record<string, string>;
   category_id?: number;
   status: 'draft' | 'scheduled' | 'published' | 'archived';
   published_at?: string;

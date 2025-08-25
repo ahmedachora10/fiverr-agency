@@ -1,42 +1,40 @@
 import React, { useState } from 'react';
 import { Link } from '@inertiajs/react';
-import { Category } from '@/types/blog';
+import { Tag } from '@/types/blog';
 import InputError from '@/components/input-error';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import TranslatableInput from '../translatable-input';
-import { useTranslation } from '@/utils/translation';
 
-interface CategoryFormData {
+interface TagFormData {
     name: Record<string, string>;
     slug: Record<string, string>;
     description: Record<string, string>;
     color: string;
-    is_active: boolean;
     meta_title: string;
     meta_description: string;
 }
 
 interface Props {
-    data: CategoryFormData;
-    setData: (key: keyof CategoryFormData, value: any) => void;
+    data: TagFormData;
+    setData: (key: keyof TagFormData, value: any) => void;
     errors: Record<string, string>;
     processing: boolean;
     onSubmit: (e: React.FormEvent) => void;
     submitText: string;
-    category?: Category;
+    tag?: Tag;
     cancelRoute: string;
 }
 
-export default function CategoryForm({
+export default function TagForm({
     data,
     setData,
     errors,
     processing,
     onSubmit,
     submitText,
-    category,
+    tag,
     cancelRoute
 }: Props) {
     const [activeTab, setActiveTab] = useState('basic');
@@ -55,14 +53,13 @@ export default function CategoryForm({
 
     const handleTranslatableChange = (field: string, locale: string, value: string) => {
         const currentValue = data[field as keyof typeof data] as Record<string, string> || {};
+        setData(field as any, {
+            ...currentValue,
+            [locale]: value
+        });
 
         if (field === 'name') {
             handleNameChange(value, locale);
-        } else {
-            setData(field as any, {
-                ...currentValue,
-                [locale]: value
-            });
         }
     };
 
@@ -98,7 +95,7 @@ export default function CategoryForm({
     };
 
     const tabs = [
-        { id: 'basic', name: 'Basic Information', icon: '📝' },
+        { id: 'basic', name: 'Basic Information', icon: '🏷️' },
         { id: 'seo', name: 'SEO Settings', icon: '🔍' },
     ];
 
@@ -140,7 +137,7 @@ export default function CategoryForm({
                                             error={getTranslatableErrors('name')}
                                             locales={locales}
                                             required
-                                            placeholder="Enter category name"
+                                            placeholder="Enter tag name"
                                             onChange={handleTranslatableChange}
                                         />
                                     </div>
@@ -167,46 +164,29 @@ export default function CategoryForm({
                                             locales={locales}
                                             onChange={handleTranslatableChange}
                                             type="textarea"
-                                            placeholder="Brief description of this category..."
+                                            placeholder="Brief description of this tag..."
                                         />
                                     </div>
 
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                        <div>
-                                            <Label htmlFor="color">Color *</Label>
-                                            <div className="mt-1 flex items-center space-x-3">
-                                                <input
-                                                    type="color"
-                                                    id="color"
-                                                    value={data.color}
-                                                    onChange={(e) => setData('color', e.target.value)}
-                                                    className="h-10 w-20 border border-gray-300 rounded-md"
-                                                />
-                                                <Input
-                                                    type="text"
-                                                    value={data.color}
-                                                    onChange={(e) => setData('color', e.target.value)}
-                                                    className="flex-1"
-                                                    placeholder="#6366f1"
-                                                />
-                                            </div>
-                                            <InputError message={errors.color} className="mt-2" />
+                                    <div>
+                                        <Label htmlFor="color">Color *</Label>
+                                        <div className="mt-1 flex items-center space-x-3">
+                                            <input
+                                                type="color"
+                                                id="color"
+                                                value={data.color}
+                                                onChange={(e) => setData('color', e.target.value)}
+                                                className="h-10 w-20 border border-gray-300 rounded-md"
+                                            />
+                                            <Input
+                                                type="text"
+                                                value={data.color}
+                                                onChange={(e) => setData('color', e.target.value)}
+                                                className="flex-1"
+                                                placeholder="#10b981"
+                                            />
                                         </div>
-
-                                        <div>
-                                            <Label>Status</Label>
-                                            <div className="mt-1">
-                                                <label className="inline-flex items-center">
-                                                    <input
-                                                        type="checkbox"
-                                                        checked={data.is_active}
-                                                        onChange={(e) => setData('is_active', e.target.checked)}
-                                                        className="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                                    />
-                                                    <span className="ml-2 text-sm text-gray-600">Active</span>
-                                                </label>
-                                            </div>
-                                        </div>
+                                        <InputError message={errors.color} className="mt-2" />
                                     </div>
                                 </div>
                             )}
@@ -260,22 +240,22 @@ export default function CategoryForm({
 
                 {/* Sidebar */}
                 <div className="space-y-6">
-                    {/* Category Stats (only for edit) */}
-                    {category && (
+                    {/* Tag Stats (only for edit) */}
+                    {tag && (
                         <div className="bg-white rounded-lg shadow p-6">
                             <h3 className="text-lg font-medium text-gray-900 mb-4">Statistics</h3>
                             <div className="space-y-2 text-sm">
                                 <div className="flex justify-between">
-                                    <span className="text-gray-600">Published Posts:</span>
-                                    <span className="font-medium">{category.published_posts_count || 0}</span>
+                                    <span className="text-gray-600">Posts:</span>
+                                    <span className="font-medium">{tag.published_posts_count || 0}</span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-gray-600">Created:</span>
-                                    <span className="font-medium">{new Date(category.created_at).toLocaleDateString()}</span>
+                                    <span className="font-medium">{new Date(tag.created_at).toLocaleDateString()}</span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-gray-600">Updated:</span>
-                                    <span className="font-medium">{new Date(category.updated_at).toLocaleDateString()}</span>
+                                    <span className="font-medium">{new Date(tag.updated_at).toLocaleDateString()}</span>
                                 </div>
                             </div>
                         </div>
@@ -291,7 +271,7 @@ export default function CategoryForm({
                             ></div>
                             <div>
                                 <p className="text-sm font-medium text-gray-900">
-                                    {data.name?.en || data.name?.ar || 'Category Name'}
+                                    {data.name?.en || data.name?.ar || 'Tag Name'}
                                 </p>
                                 <p className="text-xs text-gray-500">{data.color}</p>
                             </div>
@@ -313,4 +293,4 @@ export default function CategoryForm({
     );
 }
 
-export type { CategoryFormData };
+export type { TagFormData };

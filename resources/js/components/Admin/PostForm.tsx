@@ -6,6 +6,8 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import TranslatableInput from '../translatable-input';
+import TranslatableRichTextEditor from '@/components/Editor/TranslatableEditorJS';
+import { useTranslation } from '@/utils/translation';
 
 interface Props {
   data: PostFormData;
@@ -46,18 +48,31 @@ export default function PostForm({
   const generateSlug = (title: string) => {
     return title
       .toLowerCase()
-      .replace(/[^a-z0-9 -]/g, '')
+      .replace(/[^a-z0-9 \u0600-\u06FF -]/g, '')
       .replace(/\s+/g, '-')
       .replace(/-+/g, '-')
-      .trim();
+      .replace(/^-+|-+$/g, '');
   };
 
   const handleTitleChange = (value: string, locale: string) => {
-    handleTranslatableChange('title', locale, value);
-    if (!data.slug) {
-      handleTranslatableChange('slug', locale, generateSlug(value));
-    }
+    // Update title
+    const currentTitleValue = data.title || {};
+    setData('title', {
+      ...currentTitleValue,
+      [locale]: value
+    });
+
+    // Auto-generate slug if empty
+    const currentSlugValue = data.slug || {};
+
+    setData('slug', {
+      ...currentSlugValue,
+      [locale]: generateSlug(value)
+    });
+
   };
+
+
 
   const getTranslatableErrors = (field: string) => {
     const fieldErrors: Record<string, string> = {};
@@ -81,7 +96,7 @@ export default function PostForm({
 
   const handleTranslatableChange = (field: string, locale: string, value: string) => {
     const currentValue = data[field as keyof typeof data] as Record<string, string> || {};
-    setData(field as any, {
+    setData(field as keyof PostFormData, {
       ...currentValue,
       [locale]: value
     });
@@ -170,14 +185,15 @@ export default function PostForm({
                   </div>
 
                   <div>
-                    <TranslatableInput
+                    <TranslatableRichTextEditor
                       name="body"
                       label="Content"
                       value={data.body as Record<string, string>}
                       error={getTranslatableErrors('body')}
                       locales={locales}
                       onChange={handleTranslatableChange}
-                      type="textarea"
+                      placeholder="Start writing your post content..."
+                      required
                     />
                   </div>
                 </div>
@@ -357,7 +373,7 @@ export default function PostForm({
               <option value="">Select Category</option>
               {categories.map((category) => (
                 <option key={category.id} value={category.id}>
-                  {category.name}
+                  {useTranslation(category).tBest('name')}
                 </option>
               ))}
             </select>
@@ -376,7 +392,7 @@ export default function PostForm({
                     checked={data.tags?.includes(tag.id) || false}
                     onChange={() => handleTagToggle(tag.id)}
                   />
-                  <span className="ml-2 text-sm text-gray-700">{tag.name}</span>
+                  <span className="ml-2 text-sm text-gray-700">{useTranslation(tag).tBest('name')}</span>
                 </label>
               ))}
             </div>

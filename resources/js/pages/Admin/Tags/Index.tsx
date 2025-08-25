@@ -3,12 +3,72 @@ import { Head, Link, router } from '@inertiajs/react';
 import { Tag, PaginatedData } from '@/types/blog';
 import { Search, Plus, Edit, Eye, Trash2, Tag as TagIcon } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
+import { useTranslation } from '@/utils/translation';
 
 interface Props {
     tags: PaginatedData<Tag & { posts_count: number }>;
     filters: {
         search?: string;
     };
+}
+
+// TagRow component to handle individual tag translations
+function TagRow({ tag, onDelete }: { tag: Tag & { posts_count: number }, onDelete: (tag: Tag) => void }) {
+    const { tBest } = useTranslation(tag);
+    
+    return (
+        <tr key={tag.id} className="hover:bg-gray-50">
+            <td className="px-6 py-4 whitespace-nowrap">
+                <div className="flex items-center">
+                    <div
+                        className="w-4 h-4 rounded-full mr-3"
+                        style={{ backgroundColor: tag.color }}
+                    ></div>
+                    <div>
+                        <div className="text-sm font-medium text-gray-900">
+                            #{tBest('name')}
+                        </div>
+                        <div className="text-sm text-gray-500">
+                            /{tBest('slug')}
+                        </div>
+                    </div>
+                </div>
+            </td>
+            <td className="px-6 py-4 whitespace-nowrap">
+                <div className="flex items-center">
+                    <TagIcon className="h-4 w-4 text-gray-400 mr-1" />
+                    <span className="text-sm text-gray-900">
+                        {tag.posts_count}
+                    </span>
+                </div>
+            </td>
+            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                {new Date(tag.created_at).toLocaleDateString()}
+            </td>
+            <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <div className="flex items-center justify-end space-x-2">
+                    <Link
+                        href={route('admin.tags.show', { tag: tag })}
+                        className="text-indigo-600 hover:text-indigo-900"
+                    >
+                        <Eye className="h-4 w-4" />
+                    </Link>
+                    <Link
+                        href={route('admin.tags.edit', { tag: tag })}
+                        className="text-gray-600 hover:text-gray-900"
+                    >
+                        <Edit className="h-4 w-4" />
+                    </Link>
+                    <button
+                        onClick={() => onDelete(tag)}
+                        className="text-red-600 hover:text-red-900"
+                    >
+                        <Trash2 className="h-4 w-4" />
+                    </button>
+                </div>
+            </td>
+        </tr>
+    );
 }
 
 export default function Index({ tags, filters }: Props) {
@@ -25,7 +85,8 @@ export default function Index({ tags, filters }: Props) {
     };
 
     const handleDelete = (tag: Tag) => {
-        if (confirm(`Are you sure you want to delete "${tag.name}"?`)) {
+        const { tBest } = useTranslation(tag);
+        if (confirm(`Are you sure you want to delete "${tBest('name')}"?`)) {
             router.delete(route('admin.tags.destroy', { tag: tag.id }));
         }
     };
@@ -100,57 +161,7 @@ export default function Index({ tags, filters }: Props) {
                                     </thead>
                                     <tbody className="bg-white divide-y divide-gray-200">
                                         {tags.data.map((tag) => (
-                                            <tr key={tag.id} className="hover:bg-gray-50">
-                                                <td className="px-6 py-4 whitespace-nowrap">
-                                                    <div className="flex items-center">
-                                                        <div
-                                                            className="w-4 h-4 rounded-full mr-3"
-                                                            style={{ backgroundColor: tag.color }}
-                                                        ></div>
-                                                        <div>
-                                                            <div className="text-sm font-medium text-gray-900">
-                                                                #{tag.name}
-                                                            </div>
-                                                            <div className="text-sm text-gray-500">
-                                                                /{tag.slug}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td className="px-6 py-4 whitespace-nowrap">
-                                                    <div className="flex items-center">
-                                                        <TagIcon className="h-4 w-4 text-gray-400 mr-1" />
-                                                        <span className="text-sm text-gray-900">
-                                                            {tag.posts_count}
-                                                        </span>
-                                                    </div>
-                                                </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                    {new Date(tag.created_at).toLocaleDateString()}
-                                                </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                    <div className="flex items-center justify-end space-x-2">
-                                                        <Link
-                                                            href={route('admin.tags.show', { tag: tag })}
-                                                            className="text-indigo-600 hover:text-indigo-900"
-                                                        >
-                                                            <Eye className="h-4 w-4" />
-                                                        </Link>
-                                                        <Link
-                                                            href={route('admin.tags.edit', { tag: tag })}
-                                                            className="text-gray-600 hover:text-gray-900"
-                                                        >
-                                                            <Edit className="h-4 w-4" />
-                                                        </Link>
-                                                        <button
-                                                            onClick={() => handleDelete(tag)}
-                                                            className="text-red-600 hover:text-red-900"
-                                                        >
-                                                            <Trash2 className="h-4 w-4" />
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                            </tr>
+                                            <TagRow key={tag.id} tag={tag} onDelete={handleDelete} />
                                         ))}
                                     </tbody>
                                 </table>

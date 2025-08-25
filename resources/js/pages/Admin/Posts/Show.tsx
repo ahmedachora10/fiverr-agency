@@ -266,7 +266,7 @@ export default function Show({ post }: Props) {
                             color: tag.color,
                           }}
                         >
-                          #{tag.name}
+                          #{useTranslation(tag).tBest('name')}
                         </span>
                       ))}
                     </div>

@@ -93,20 +93,21 @@ class PostController extends Controller
     {
         $validated = $request->validated();
 
+        
         if ($request->hasFile('featured_image')) {
             if ($post->featured_image) {
                 Storage::disk('public')->delete($post->featured_image);
             }
             $validated['featured_image'] = $request->file('featured_image')->store('posts', 'public');
         }
-
+        
         if ($request->hasFile('og_image')) {
             if ($post->og_image && $post->og_image !== $post->featured_image) {
                 Storage::disk('public')->delete($post->og_image);
             }
             $validated['og_image'] = $request->file('og_image')->store('posts/og', 'public');
         }
-
+        
         $post->update($validated);
 
         if ($request->has('tags')) {

@@ -6,31 +6,47 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Str;
+use Spatie\Translatable\HasTranslations;
+use App\Traits\Slugable;
 
 class Tag extends Model
 {
-    use HasFactory;
+    use HasFactory, HasTranslations, Slugable;
 
     protected $fillable = [
         'name',
         'slug',
         'description',
         'color',
+        'meta_title',
+        'meta_description',
     ];
+
+    public $translatable = ['name', 'slug', 'description'];
 
     protected static function boot(): void
     {
         parent::boot();
 
         static::creating(function (Tag $tag) {
-            if (empty($tag->slug)) {
-                $tag->slug = Str::slug($tag->name);
+            // Handle translatable slug generation
+            foreach (config('app.locales', ['en']) as $locale) {
+                $name = $tag->getTranslation('name', $locale);
+                if ($name && empty($tag->getTranslation('slug', $locale))) {
+                    $tag->setTranslation('slug', $locale, Str::slug($name));
+                }
             }
         });
 
         static::updating(function (Tag $tag) {
-            if ($tag->isDirty('name') && empty($tag->slug)) {
-                $tag->slug = Str::slug($tag->name);
+            // Handle translatable slug generation on update
+            if ($tag->isDirty('name')) {
+                foreach (config('app.locales', ['en']) as $locale) {
+                    $name = $tag->getTranslation('name', $locale);
+                    if ($name && empty($tag->getTranslation('slug', $locale))) {
+                        $tag->setTranslation('slug', $locale, Str::slug($name));
+                    }
+                }
             }
         });
     }

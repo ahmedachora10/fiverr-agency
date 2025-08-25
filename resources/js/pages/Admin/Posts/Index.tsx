@@ -97,8 +97,8 @@ export default function Index({ posts, categories, filters }: Props) {
                   >
                     <option value="">All Categories</option>
                     {categories.map((category) => (
-                      <option key={category.id} value={category.slug}>
-                        {category.name}
+                      <option key={category.id} value={useTranslation(category).tBest('slug')}>
+                        {useTranslation(category).tBest('name')}
                       </option>
                     ))}
                   </select>
@@ -136,6 +136,9 @@ export default function Index({ posts, categories, filters }: Props) {
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Category
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Tags
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Status
@@ -182,9 +185,34 @@ export default function Index({ posts, categories, filters }: Props) {
                                 color: post.category.color,
                               }}
                             >
-                              {post.category.name}
+                              {useTranslation(post.category).tBest('name')}
                             </span>
                           )}
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex flex-wrap gap-1">
+                            {post.tags && post.tags.length > 0 ? (
+                              post.tags.slice(0, 3).map((tag) => (
+                                <span
+                                  key={tag.id}
+                                  className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
+                                  style={{
+                                    backgroundColor: `${tag.color}20`,
+                                    color: tag.color,
+                                  }}
+                                >
+                                  #{useTranslation(tag).tBest('name')}
+                                </span>
+                              ))
+                            ) : (
+                              <span className="text-xs text-gray-400">No tags</span>
+                            )}
+                            {post.tags && post.tags.length > 3 && (
+                              <span className="text-xs text-gray-500">
+                                +{post.tags.length - 3} more
+                              </span>
+                            )}
+                          </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           {getStatusBadge(post.status)}

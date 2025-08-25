@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Str;
 use Spatie\Translatable\HasTranslations;
+use App\Traits\Slugable;
 
 class Post extends Model
 {
-    use HasFactory, HasTranslations;
+    use HasFactory, HasTranslations, Slugable;
 
     protected $fillable = [
         'title',
@@ -54,7 +55,7 @@ class Post extends Model
             if (empty($post->getTranslation('slug', $currentLocale))) {
                 $title = $post->getTranslation('title', $currentLocale);
                 if ($title) {
-                    $baseSlug = Str::slug($title);
+                    $baseSlug = Str::slug($title, '-', $currentLocale);
                     $uniqueSlug = self::generateUniqueSlug($baseSlug);
                     $post->setTranslation('slug', $currentLocale, $uniqueSlug);
                 }
@@ -82,7 +83,7 @@ class Post extends Model
             if ($post->isDirty('title') && empty($post->getTranslation('slug', $currentLocale))) {
                 $title = $post->getTranslation('title', $currentLocale);
                 if ($title) {
-                    $baseSlug = Str::slug($title);
+                    $baseSlug = Str::slug($title, '-', $currentLocale);
                     $uniqueSlug = self::generateUniqueSlug($baseSlug, $post->id);
                     $post->setTranslation('slug', $currentLocale, $uniqueSlug);
                 }
@@ -101,7 +102,9 @@ class Post extends Model
         });
 
         static::retrieved(function (Post $post) {
-            $post->image = asset($post->featured_image);
+            if(request()->isMethod('GET')) {
+                $post->image = asset($post->featured_image);
+            }
             // Don't override translatable fields - let spatie/laravel-translatable handle them
             // The translatable trait will automatically return the correct locale or full array as needed
         });
@@ -143,28 +146,6 @@ class Post extends Model
         });
     }
 
-    public function scopeBySlug($query, $slug)
-    {
-        return $query->where(function ($q) use ($slug) {
-            $q->where('slug->en', $slug)
-              ->orWhere('slug->ar', $slug);
-        });
-    }
-
-    /**
-     * Retrieve the model for a bound value.
-     */
-    public function resolveRouteBinding($value, $field = null)
-    {
-        // If field is specified and it's 'slug', handle JSON slug lookup
-        if ($field === 'slug') {
-            return $this->bySlug($value)->first();
-        }
-
-        // Default behavior for other fields
-        return parent::resolveRouteBinding($value, $field);
-    }
-
     public function getMetaTitleAttribute(): ?string
     {
         return $this->attributes['meta_title'] ?? $this->title;
@@ -201,23 +182,5 @@ class Post extends Model
         $wordsPerMinute = 200; // Average reading speed
         
         return max(1, (int) ceil($wordCount / $wordsPerMinute));
-    }
-
-    /**
-     * Generate a unique slug for the post
-     */
-    private static function generateUniqueSlug(string $baseSlug, ?int $excludeId = null): string
-    {
-        $slug = $baseSlug;
-        $counter = 1;
-
-        while (static::bySlug($slug)->when($excludeId, function ($query, $excludeId) {
-            return $query->where('id', '!=', $excludeId);
-        })->exists()) {
-            $slug = $baseSlug . '-' . $counter;
-            $counter++;
-        }
-
-        return $slug;
     }
 }
