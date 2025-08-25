@@ -6,7 +6,6 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import TranslatableInput from '../translatable-input';
-import { useTranslation } from '@/utils/translation';
 
 interface CategoryFormData {
     name: Record<string, string>;
@@ -55,14 +54,13 @@ export default function CategoryForm({
 
     const handleTranslatableChange = (field: string, locale: string, value: string) => {
         const currentValue = data[field as keyof typeof data] as Record<string, string> || {};
+        setData(field as any, {
+            ...currentValue,
+            [locale]: value
+        });
 
         if (field === 'name') {
             handleNameChange(value, locale);
-        } else {
-            setData(field as any, {
-                ...currentValue,
-                [locale]: value
-            });
         }
     };
 
