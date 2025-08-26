@@ -19,7 +19,7 @@ export default function Edit({ post, categories, tags }: Props) {
     excerpt: post.excerpt || {},
     body: post.body || {},
     category_id: post.category_id,
-    status: post.status,
+    status: post.status || 'draft',
     published_at: post.published_at ? new Date(post.published_at).toISOString().slice(0, 16) : '',
     meta_title: post.meta_title || '',
     meta_description: post.meta_description || '',

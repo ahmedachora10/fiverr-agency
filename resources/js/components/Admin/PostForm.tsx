@@ -325,13 +325,13 @@ export default function PostForm({
               {activeTab === 'settings' && (
                 <div className="space-y-6">
                   <div>
-                    <Label htmlFor="status">Status</Label>
+                    <Label htmlFor="status">Status *</Label>
                     <Select
-                      value={data.status}
+                      value={data.status || 'draft'}
                       onValueChange={(value) => setData('status', value)}
                     >
                       <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Select a fruit" />
+                        <SelectValue placeholder="Select status" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
