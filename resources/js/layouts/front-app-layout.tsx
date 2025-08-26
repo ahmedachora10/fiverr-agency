@@ -12,7 +12,6 @@ interface FrontAppLayoutProps {
 export default ({ children, breadcrumbs, ...props }: FrontAppLayoutProps) => {
 
     return (
-
         <AppShell variant="header">
             <AppContent className="overflow-x-hidden" {...props}>
                 {/* <AppSidebarHeader breadcrumbs={breadcrumbs} /> */}

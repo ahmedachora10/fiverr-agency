@@ -7,13 +7,16 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { usePage } from "@inertiajs/react";
 import { BlogPost, Tag } from "@/types/blog";
 import { useTranslation } from "@/utils/translation";
+import { usePageTracking } from "@/hooks/use-page-tracking";
 
 const Blogs = () => {
     const { t } = useLanguage();
+    const { trackEvent } = usePageTracking();
 
     const { props } = usePage();
 
     const posts: BlogPost[] = props.posts as BlogPost[];
+
 
     return (
         <section className="py-20 bg-muted/30">
@@ -74,7 +77,7 @@ const Blogs = () => {
                                                     </Badge>
                                                 ))}
                                             </div>
-                                            <Link href={route('blog.show', useTranslation(post).tBest('slug'))}>
+                                            <Link href={route('blog.show', useTranslation(post).tBest('slug'))} onClick={() => trackEvent('click', 'blog', useTranslation(post).tBest('title'))}>
                                                 <Button variant="ghost" size="sm" className="group/btn">
                                                     {t('blog.readMore')}
                                                     <ArrowRight className="w-4 h-4 ml-1 group-hover/btn:translate-x-1 transition-transform" />
