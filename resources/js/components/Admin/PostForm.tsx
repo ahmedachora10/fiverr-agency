@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import TranslatableInput from '../translatable-input';
 import TranslatableQuillEditor from '@/components/Editor/TranslatableEditorJS';
 import { useTranslation } from '@/utils/translation';
+import { Select, SelectItem } from '../ui/select';
 
 interface Props {
   data: PostFormData;
@@ -317,23 +318,21 @@ export default function PostForm({
                 <div className="space-y-6">
                   <div>
                     <Label htmlFor="status">Status</Label>
-                    <select
-                      id="status"
-                      className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                    <Select
                       value={data.status}
-                      onChange={(e) => setData('status', e.target.value as any)}
+                      onValueChange={(value) => setData('status', value)}
                     >
-                      <option value="draft">Draft</option>
-                      <option value="scheduled">Scheduled</option>
-                      <option value="published">Published</option>
-                      <option value="archived">Archived</option>
-                    </select>
+                      <SelectItem value="draft">Draft</SelectItem>
+                      <SelectItem value="scheduled">Scheduled</SelectItem>
+                      <SelectItem value="published">Published</SelectItem>
+                      <SelectItem value="archived">Archived</SelectItem>
+                    </Select>
                     <InputError message={errors.status} className="mt-2" />
                   </div>
 
                   <div>
                     <Label htmlFor="published_at">Publish Date</Label>
-                    <input
+                    <Input
                       id="published_at"
                       type="datetime-local"
                       className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
@@ -345,7 +344,7 @@ export default function PostForm({
 
                   <div>
                     <Label htmlFor="featured_image">Featured Image</Label>
-                    <input
+                    <Input
                       id="featured_image"
                       type="file"
                       accept="image/*"
