@@ -93,10 +93,6 @@ class PostController extends Controller
     {
         $validated = $request->validated();
 
-
-        dd($validated);
-
-
         if($request->slug == $post->slug){
             unset($validated['slug']);
         }
