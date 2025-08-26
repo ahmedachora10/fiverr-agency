@@ -49,9 +49,11 @@ const Blogs = () => {
                                     </div>
                                     <CardHeader className="pb-4">
                                         <div className="flex items-center gap-2 mb-3">
-                                            <Badge variant="secondary" className="text-xs">
-                                                {useTranslation(post.category).tBest('name')}
-                                            </Badge>
+                                            {post.category && (
+                                                <Badge variant="secondary" className="text-xs">
+                                                    {useTranslation(post.category).tBest('name')}
+                                                </Badge>
+                                            )}
                                             <div className="flex items-center text-muted-foreground text-sm gap-4">
                                                 <div className="flex items-center gap-1">
                                                     <User className="w-3 h-3" />
@@ -73,7 +75,7 @@ const Blogs = () => {
                                     <CardContent className="pt-0">
                                         <div className="flex items-center justify-between">
                                             <div className="flex flex-wrap gap-1">
-                                                {post.tags?.slice(0, 2).map((tag: Tag) => (
+                                                {post.tags && post.tags?.slice(0, 2).map((tag: Tag) => (
                                                     <Badge key={tag.id} variant="outline" className="text-xs">
                                                         {useTranslation(tag).tBest('name')}
                                                     </Badge>
