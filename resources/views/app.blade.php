@@ -40,6 +40,11 @@
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
 
+        @if($google_analytics = \App\Models\Setting::get('google_analytics'))
+        {!!$google_analytics!!}
+        <meta name="google-site-tracking" content="{{Str::match('/G-[A-Z0-9]+|UA-[0-9]+-[0-9]+/', $google_analytics)}}">
+        @endif
+
         @routes
         @viteReactRefresh
         @vite(['resources/js/app.tsx', "resources/js/pages/{$page['component']}.tsx"])

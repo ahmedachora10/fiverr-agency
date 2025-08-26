@@ -15,14 +15,12 @@ export function usePageTracking() {
         // Track page view when URL changes
 
         if (typeof window.gtag !== 'undefined') {
-            document.addEventListener('DOMContentLoaded', () => {
-                const trackingId = document.querySelector('meta[name="google-site-trucking"]')?.getAttribute('content');
-                if (trackingId) {
-                    window.gtag('config', trackingId, {
-                        page_path: url,
-                    });
-                }
-            });
+            const trackingId = document.querySelector('meta[name="google-site-tracking"]')?.getAttribute('content');
+            if (trackingId) {
+                window.gtag('config', trackingId, {
+                    page_path: url,
+                });
+            }
         }
     }, [url]);
 
