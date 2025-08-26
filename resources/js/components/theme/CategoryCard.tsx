@@ -29,7 +29,7 @@ const CategoryCard = ({
   featured = false
 }: CategoryCardProps) => {
   const { isRTL, t } = useLanguage();
-  const { trackAffiliateClick, trackEvent } = usePageTracking();
+  const { trackAffiliateClick } = usePageTracking();
   const handleAffiliateClick = () => {
     // Track affiliate click event
     trackAffiliateClick(title);

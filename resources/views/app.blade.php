@@ -30,7 +30,11 @@
             }
         </style>
 
-        <title inertia>{{ config('app.name', 'Laravel') }}</title>
+        <meta name="description" content="{{ config('app.description', 'Fiverr Agency') }}">
+        <meta name="keywords" content="{{ config('app.keywords', 'Fiverr Agency') }}">
+        
+
+        <title inertia>{{ config('app.name', 'Fiverr Agency') }}</title>
 
         <link rel="icon" href="/icon.png" sizes="any">
         <link rel="icon" href="/icon.png" type="image/png">
@@ -40,9 +44,12 @@
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
 
-        @if($google_analytics = \App\Models\Setting::get('google_analytics'))
-        {!!$google_analytics!!}
-        <meta name="google-site-tracking" content="{{Str::match('/G-[A-Z0-9]+|UA-[0-9]+-[0-9]+/', $google_analytics)}}">
+        <!-- show it only on front app -->
+        @if(!request()->routeIs('admin.*'))
+            @if($google_analytics = \App\Models\Setting::get('google_analytics'))
+            {!!$google_analytics!!}
+            <meta name="google-site-tracking" content="{{Str::match('/G-[A-Z0-9]+|UA-[0-9]+-[0-9]+/', $google_analytics)}}">
+            @endif
         @endif
 
         @routes
