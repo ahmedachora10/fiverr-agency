@@ -92,11 +92,6 @@ class PostController extends Controller
     public function update(UpdatePostRequest $request, Post $post)
     {
         $validated = $request->validated();
-
-        if($request->slug == $post->slug){
-            unset($validated['slug']);
-        }
-
         
         if ($request->hasFile('featured_image')) {
             if ($post->featured_image) {
@@ -112,7 +107,7 @@ class PostController extends Controller
             $validated['og_image'] = $request->file('og_image')->store('posts/og', 'public');
         }
 
-        dd($validated);
+        // dd($validated);
         
         $post->update($validated);
 
