@@ -92,6 +92,7 @@ export function getBestTranslation(
 ): string {
   const targetLocale = locale || getCurrentLocale();
 
+  console.log(field, data[field], data);
 
   if (typeof data[field] === 'string') {
     return data[field];
