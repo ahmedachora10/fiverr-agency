@@ -7,12 +7,12 @@ import Testimonials from "@/components/theme/Testimonials";
 import FAQ from "@/components/theme/FAQ";
 import FinalCTA from "@/components/theme/FinalCTA";
 import Footer from "@/components/theme/Footer";
-import { LanguageProvider } from "@/contexts/LanguageContext";
 import Blogs from "@/components/theme/Blogs";
+import FrontAppLayout from "@/layouts/front-app-layout";
 
 const Index = () => {
   return (
-    <LanguageProvider>
+    <FrontAppLayout>
       <div className="min-h-screen bg-background">
         <TopBar />
         <Hero />
@@ -25,7 +25,7 @@ const Index = () => {
         <FinalCTA />
         <Footer />
       </div>
-    </LanguageProvider>
+    </FrontAppLayout>
   );
 };
 
