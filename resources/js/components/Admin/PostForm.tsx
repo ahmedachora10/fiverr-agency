@@ -8,7 +8,15 @@ import { Button } from '@/components/ui/button';
 import TranslatableInput from '../translatable-input';
 import TranslatableQuillEditor from '@/components/Editor/TranslatableEditorJS';
 import { useTranslation } from '@/utils/translation';
-import { Select, SelectItem } from '../ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 interface Props {
   data: PostFormData;
