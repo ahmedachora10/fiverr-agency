@@ -106,8 +106,6 @@ class PostController extends Controller
             }
             $validated['og_image'] = $request->file('og_image')->store('posts/og', 'public');
         }
-
-        dd($validated);
         
         $post->update($validated);
 
