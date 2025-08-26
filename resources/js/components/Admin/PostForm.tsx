@@ -330,10 +330,12 @@ export default function PostForm({
                       value={data.status}
                       onValueChange={(value) => setData('status', value)}
                     >
-                      <SelectItem value="draft">Draft</SelectItem>
-                      <SelectItem value="scheduled">Scheduled</SelectItem>
-                      <SelectItem value="published">Published</SelectItem>
-                      <SelectItem value="archived">Archived</SelectItem>
+                      <SelectContent>
+                        <SelectItem value="draft">Draft</SelectItem>
+                        <SelectItem value="scheduled">Scheduled</SelectItem>
+                        <SelectItem value="published">Published</SelectItem>
+                        <SelectItem value="archived">Archived</SelectItem>
+                      </SelectContent>
                     </Select>
                     <InputError message={errors.status} className="mt-2" />
                   </div>
