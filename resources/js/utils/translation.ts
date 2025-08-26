@@ -104,9 +104,9 @@ export function getBestTranslation(
   }
 
   // Fallback to English
-  if (targetLocale !== 'en' && hasTranslation(data, field, 'en')) {
-    return getTranslation(data, field, 'en');
-  }
+  // if (targetLocale !== 'en' && hasTranslation(data, field, 'en')) {
+  //   return getTranslation(data, field, 'en');
+  // }
 
 
   // Last resort: return any available translation
