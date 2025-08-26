@@ -32,7 +32,6 @@ const CategoryCard = ({
   const { trackAffiliateClick, trackEvent } = usePageTracking();
   const handleAffiliateClick = () => {
     // Track affiliate click event
-    console.log('Affiliate click:', { title, affiliateLink });
     trackAffiliateClick(title);
     // trackEvent('click', 'affiliate_link', title);
     window.open(affiliateLink, '_blank', 'noopener noreferrer');

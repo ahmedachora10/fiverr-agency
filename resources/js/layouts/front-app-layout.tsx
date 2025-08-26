@@ -20,9 +20,15 @@ export default ({ children, breadcrumbs, ...props }: FrontAppLayoutProps) => {
         document.head.insertAdjacentHTML(
             'beforeend',
             `${setting(settings, 'google_analytics')}`
-        )
+        );
 
-        console.log('setting(settings, "google_analytics")', setting(settings, 'google_analytics'), settings);
+        // grap trucking id from google_analytics
+        const truckingId = setting(settings, 'google_analytics').match(/G-\w+/)?.[0];
+
+        document.head.insertAdjacentHTML(
+            'beforeend',
+            `<meta name="google-site-trucking" content="${truckingId}">`
+        );
     }, []);
 
     return (

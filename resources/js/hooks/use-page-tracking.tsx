@@ -15,8 +15,13 @@ export function usePageTracking() {
         // Track page view when URL changes
 
         if (typeof window.gtag !== 'undefined') {
-            window.gtag('config', import.meta.env.VITE_GA_MEASUREMENT_ID_2, {
-                page_path: url,
+            document.addEventListener('DOMContentLoaded', () => {
+                const trackingId = document.querySelector('meta[name="google-site-trucking"]')?.getAttribute('content');
+                if (trackingId) {
+                    window.gtag('config', trackingId, {
+                        page_path: url,
+                    });
+                }
             });
         }
     }, [url]);

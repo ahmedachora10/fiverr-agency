@@ -13,7 +13,6 @@ const Footer = () => {
   function handleAffiliateClick(event: React.MouseEvent<HTMLAnchorElement>, link: string) {
     event.preventDefault();
     trackAffiliateFooterClick(event.currentTarget.textContent);
-    console.log('Affiliate click:', event.currentTarget.textContent);
     window.open(link, '_blank', 'noopener noreferrer');
   };
 

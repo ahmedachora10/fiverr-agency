@@ -68,8 +68,6 @@ export default function PostForm({ post, categories, tags, isEditing = false }: 
         return fieldErrors;
     };
 
-    console.log(locales);
-
     return (
         <form onSubmit={handleSubmit} className="space-y-6">
             {/* Translatable Title */}
