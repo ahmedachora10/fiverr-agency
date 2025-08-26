@@ -70,7 +70,7 @@ export default function Show({ post, relatedPosts }: Props) {
                 "@type": "WebPage",
                 "@id": window.location.href
             },
-            "wordCount": tBest('body').split(' ').length,
+            "wordCount": tBest('body')?.split(' ')?.length || 0,
             "timeRequired": `PT${post.reading_time_minutes}M`
         };
 
