@@ -93,6 +93,14 @@ class PostController extends Controller
     {
         $validated = $request->validated();
 
+
+        dd($validated);
+
+
+        if($request->slug == $post->slug){
+            unset($validated['slug']);
+        }
+
         
         if ($request->hasFile('featured_image')) {
             if ($post->featured_image) {
