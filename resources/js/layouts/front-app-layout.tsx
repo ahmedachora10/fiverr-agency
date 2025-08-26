@@ -20,6 +20,7 @@ export default ({ children, breadcrumbs, ...props }: FrontAppLayoutProps) => {
         const title = document.querySelector('title');
         const description = document.querySelector('meta[name="description"]');
         const keywords = document.querySelector('meta[name="keywords"]');
+
         if (title) {
             title.textContent = setting(settings, 'app_name') || 'Fiverr Agency';
         }

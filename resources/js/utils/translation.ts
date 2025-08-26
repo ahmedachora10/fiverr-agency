@@ -92,10 +92,6 @@ export function getBestTranslation(
 ): string {
   const targetLocale = locale || getCurrentLocale();
 
-  // if (typeof data[field] === 'string') {
-  //   return data[field] || '';
-  // }
-
   // Try target locale first
   if (hasTranslation(data, field, targetLocale)) {
     return getTranslation(data, field, targetLocale);
