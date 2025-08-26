@@ -101,14 +101,6 @@ class Post extends Model
             }
         });
 
-        static::retrieved(function (Post $post) {
-            if(!request()->isMethod('PUT')) {
-                $post->image = asset($post->featured_image);
-            }
-            // Don't override translatable fields - let spatie/laravel-translatable handle them
-            // The translatable trait will automatically return the correct locale or full array as needed
-        });
-
     }
 
     public function author(): BelongsTo
