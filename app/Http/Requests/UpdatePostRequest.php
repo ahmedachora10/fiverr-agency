@@ -22,7 +22,7 @@ class UpdatePostRequest extends FormRequest
             'category_id' => 'nullable|exists:categories,id',
             'status' => 'required|in:draft,scheduled,published,archived',
             'published_at' => 'nullable|date',
-            'featured_image' => 'nullable|image|max:2048',
+            'featured_image' => 'nullable|image',
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string|max:255',
             'canonical_url' => 'nullable|url|max:255',
