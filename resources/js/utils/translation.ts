@@ -111,7 +111,7 @@ export function getBestTranslation(
 
   // Last resort: return any available translation
   const allTranslations = getAllTranslations(data, field);
-  return allTranslations[targetLocale] || allTranslations?.en || allTranslations?.ar || '';
+  return allTranslations?.en || allTranslations?.ar || '';
 }
 
 /**
