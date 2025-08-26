@@ -17,6 +17,8 @@ const Blogs = () => {
 
     const posts: BlogPost[] = props.posts as BlogPost[];
 
+    const placeHolderBlogImage: string = 'https://blog.snappymob.com/wp-content/uploads/2020/12/8-Tips-for-Designing-Empty-Placeholder-Pages-Leni-Featured.png';
+
 
     return (
         <section className="py-20 bg-muted/30">
@@ -40,7 +42,7 @@ const Blogs = () => {
                                 <Card key={post.id} className="group hover:shadow-lg transition-all duration-300 border-muted">
                                     <div className="aspect-video bg-muted rounded-t-lg overflow-hidden">
                                         <img
-                                            src={`/storage/${post.featured_image}`}
+                                            src={post.featured_image ? `/storage/${post.featured_image}` : placeHolderBlogImage}
                                             alt={useTranslation(post).tBest('title')}
                                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                         />

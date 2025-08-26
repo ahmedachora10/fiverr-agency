@@ -13,6 +13,7 @@ interface Props {
 
 export default function Show({ post, relatedPosts }: Props) {
     const { tBest } = useTranslation(post);
+    const placeHolderBlogImage: string = 'https://blog.snappymob.com/wp-content/uploads/2020/12/8-Tips-for-Designing-Empty-Placeholder-Pages-Leni-Featured.png';
     useEffect(() => {
         // Set up SEO meta tags dynamically
         const metaTitle = post.meta_title || tBest('title');
@@ -170,7 +171,7 @@ export default function Show({ post, relatedPosts }: Props) {
                     {post.featured_image && (
                         <div className="mb-8">
                             <img
-                                src={`/storage/${post.featured_image}`}
+                                src={post.featured_image ? `/storage/${post.featured_image}` : placeHolderBlogImage}
                                 alt={tBest('title')}
                                 className="w-full h-96 object-cover rounded-lg shadow-lg"
                             />
@@ -232,7 +233,7 @@ export default function Show({ post, relatedPosts }: Props) {
                                         {relatedPost.featured_image && (
                                             <div className="aspect-w-16 aspect-h-9 mb-4">
                                                 <img
-                                                    src={`/storage/${relatedPost.featured_image}`}
+                                                    src={relatedPost.featured_image ? `/storage/${relatedPost.featured_image}` : placeHolderBlogImage}
                                                     alt={useTranslation(relatedPost).tBest('title')}
                                                     className="w-full h-48 object-cover rounded-lg group-hover:opacity-90 transition-opacity"
                                                 />
