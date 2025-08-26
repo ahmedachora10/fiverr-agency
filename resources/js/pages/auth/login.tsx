@@ -14,6 +14,10 @@ interface LoginProps {
 }
 
 export default function Login({ status, canResetPassword }: LoginProps) {
+
+
+    const canRegister = false;
+
     return (
         <AuthLayout title="Log in to your account" description="Enter your email and password below to log in">
             <Head title="Log in" />
@@ -69,12 +73,13 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                             </Button>
                         </div>
 
-                        <div className="text-center text-sm text-muted-foreground">
+                        {/* register */}
+                        {canRegister && <div className="text-center text-sm text-muted-foreground">
                             Don't have an account?{' '}
                             <TextLink href={route('register')} tabIndex={5}>
                                 Sign up
                             </TextLink>
-                        </div>
+                        </div>}
                     </>
                 )}
             </Form>
