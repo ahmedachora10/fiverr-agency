@@ -103,15 +103,9 @@ export function getBestTranslation(
     return getTranslation(data, field, targetLocale);
   }
 
-  // Fallback to English
-  // if (targetLocale !== 'en' && hasTranslation(data, field, 'en')) {
-  //   return getTranslation(data, field, 'en');
-  // }
-
-
   // Last resort: return any available translation
-  const allTranslations = getAllTranslations(data, field);
-  return allTranslations?.en || allTranslations?.ar || '';
+  // const allTranslations = getAllTranslations(data, field);
+  return data[field]['end'] || data[field]['ar'] || '';
 }
 
 /**
