@@ -9,7 +9,7 @@ use App\Http\Controllers\Api\Admin\UploadController;
 
 Route::get('/', function () {
     return Inertia::render('Index', [
-        'posts' => Post::with(['category', 'tags', 'author'])->take(6)->get(),
+        'posts' => Post::with(['category', 'tags', 'author'])->published()->take(6)->get(),
     ]);
 })->name('home');
 
