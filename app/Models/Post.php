@@ -163,7 +163,7 @@ class Post extends Model
 
     public function getOgDescriptionAttribute(): ?string
     {
-        return $this->attributes['og_description'] ?? $this->excerpt;
+        return $this->attributes['og_description'] ?? str($this->excerpt)->limit(160)->toString();
     }
 
     public function getOgImageAttribute(): ?string
