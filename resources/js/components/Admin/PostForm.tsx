@@ -194,22 +194,6 @@ export default function PostForm({
                   </div>
 
                   <div>
-                    <Label htmlFor="featured_image">Featured Image</Label>
-                    <Input
-                      id="featured_image"
-                      type="file"
-                      accept="image/*"
-                      className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
-                      onChange={(e) => {
-                        setData('featured_image', e.target.files?.[0]);
-                        console.log(e.target.files?.[0], 'data: ', data)
-                      }}
-                      onInvalid={(e) => e.preventDefault()}
-                    />
-                    <InputError message={errors.featured_image} className="mt-2" />
-                  </div>
-
-                  <div>
                     <TranslatableQuillEditor
                       name="body"
                       label="Content"
@@ -372,6 +356,21 @@ export default function PostForm({
                       onChange={(e) => setData('published_at', e.target.value)}
                     />
                     <InputError message={errors.published_at} className="mt-2" />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="featured_image">Featured Image</Label>
+                    <Input
+                      id="featured_image"
+                      type="file"
+                      accept="image/*"
+                      className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+                      onChange={(e) => {
+                        setData('featured_image', e.target.files?.[0]);
+                        console.log(e.target.files?.[0], 'data: ', data)
+                      }}
+                    />
+                    <InputError message={errors.featured_image} className="mt-2" />
                   </div>
                 </div>
               )}

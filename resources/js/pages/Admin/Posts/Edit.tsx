@@ -1,5 +1,5 @@
 import React from 'react';
-import { Head, useForm } from '@inertiajs/react';
+import { Head, useForm, router } from '@inertiajs/react';
 import { Post, Category, Tag, PostFormData } from '@/types/blog';
 import AppLayout from '@/layouts/app-layout';
 import PostForm from '@/components/Admin/PostForm';
@@ -32,7 +32,20 @@ export default function Edit({ post, categories, tags }: Props) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    put(route('admin.posts.update', post.id));
+
+    // Check if we have file uploads
+    const hasFiles = data.featured_image || data.og_image;
+    
+    if (hasFiles) {
+      // Use router.post with _method for file uploads
+      router.post(route('admin.posts.update', post.id), {
+        ...data,
+        _method: 'PUT'
+      });
+    } else {
+      // Use regular PUT for non-file updates
+      put(route('admin.posts.update', post.id));
+    }
   };
 
   return (
