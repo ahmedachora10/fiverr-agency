@@ -97,10 +97,12 @@ const Blogs = () => {
 
                 {/* View All Button */}
                 <div className="text-center">
-                    <Button size="lg" className="font-semibold">
-                        {t('blog.viewAll')}
-                        <ArrowRight className="w-5 h-5 ml-2" />
-                    </Button>
+                    <Link href={route('blog.index')}>
+                        <Button size="lg" className="font-semibold">
+                            {t('blog.viewAll')}
+                            <ArrowRight className="w-5 h-5 ml-2" />
+                        </Button>
+                    </Link>
                 </div>
             </div>
         </section>

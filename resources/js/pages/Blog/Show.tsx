@@ -4,6 +4,8 @@ import { Post } from '@/types/blog';
 import { ClockIcon, EyeIcon, CalendarIcon, ArrowLeft } from 'lucide-react';
 import { useTranslation } from '@/utils/translation';
 import QuillRenderer from '@/components/Editor/EditorJSRenderer';
+import TopBar from '@/components/theme/TopBar';
+import FrontAppLayout from '@/layouts/front-app-layout';
 
 
 interface Props {
@@ -54,7 +56,7 @@ export default function Show({ post, relatedPosts }: Props) {
         }
 
         // Add structured data
-        const structuredData = {
+        const structuredData: any = {
             "@context": "https://schema.org",
             "@type": "BlogPosting",
             "headline": tBest('title'),
@@ -82,7 +84,7 @@ export default function Show({ post, relatedPosts }: Props) {
             structuredData["keywords"] = post.tags.map(tag => useTranslation(tag).tBest('name')).join(', ');
         }
 
-        let structuredDataScript = document.querySelector('script[type="application/ld+json"]');
+        let structuredDataScript: HTMLScriptElement | null = document.querySelector('script[type="application/ld+json"]');
         if (!structuredDataScript) {
             structuredDataScript = document.createElement('script');
             structuredDataScript.type = 'application/ld+json';
@@ -97,8 +99,10 @@ export default function Show({ post, relatedPosts }: Props) {
     }, [post]);
 
     return (
-        <>
+        <FrontAppLayout>
             <Head title={post.meta_title || tBest('title')} />
+
+            <TopBar />
 
             <div className="min-h-screen bg-gray-50">
                 <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -278,6 +282,6 @@ export default function Show({ post, relatedPosts }: Props) {
                     )}
                 </article>
             </div>
-        </>
+        </FrontAppLayout>
     );
 }

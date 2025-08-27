@@ -13,16 +13,16 @@ class BlogController extends Controller
 {
     public function index(Request $request)
     {
-        $cacheKey = 'blog.posts.' . md5($request->getQueryString() ?? '');
-        
+        $cacheKey = md5('blog.posts.' . $request->getQueryString() ?? 'all');
+
         $posts = Cache::remember($cacheKey, 3600, function () use ($request) {
             return Post::published()
-                ->with(['author', 'category', 'tags'])
-                ->when($request->category, fn($q) => $q->byCategory($request->category))
-                ->when($request->tag, fn($q) => $q->byTag($request->tag))
-                ->when($request->search, fn($q) => $q->where('title', 'like', "%{$request->search}%"))
-                ->latest('published_at')
-                ->paginate(12);
+            ->with(['author', 'category', 'tags'])
+            ->when($request->category, fn($q) => $q->byCategory($request->category))
+            ->when($request->tag, fn($q) => $q->byTag($request->tag))
+            ->when($request->search, fn($q) => $q->where('title', 'like', "%{$request->search}%"))
+            ->latest('published_at')
+            ->paginate(12);
         });
 
         $categories = Cache::remember('blog.categories', 3600, function () {
@@ -37,6 +37,7 @@ class BlogController extends Controller
                     $query->where('status', 'published')
                           ->where('published_at', '<=', now());
                 }])
+                ->groupBy('tags.id')
                 ->having('published_posts_count', '>', 0)
                 ->orderBy('published_posts_count', 'desc')
                 ->take(20)
@@ -59,8 +60,8 @@ class BlogController extends Controller
 
         $post->load(['author', 'category', 'tags']);
         
-        // Increment view count asynchronously
-        \App\Jobs\IncrementPostViews::dispatch($post->id);
+        // Increment view count
+        $this->incrementViews($post);
 
         $relatedPosts = Cache::remember("blog.related.{$post->id}", 3600, function () use ($post) {
             return Post::published()
@@ -108,5 +109,18 @@ class BlogController extends Controller
             'tag' => $tag,
             'posts' => $posts,
         ]);
+    }
+
+    private function incrementViews(Post $post)
+    {
+        $cacheKey = md5("post_views_{$post->id}");
+        
+        Cache::put($cacheKey, Cache::get($cacheKey, 0) + 1);
+        
+        if (Cache::get($cacheKey) % 10 === 0) {
+            $post->increment('views_count', 10);
+            Cache::forget($cacheKey);
+        }
+        
     }
 }

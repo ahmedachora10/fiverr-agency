@@ -74,6 +74,10 @@ class Post extends Model
                     $post->setTranslation('excerpt', $currentLocale, Str::limit(strip_tags($body), 160));
                 }
             }
+
+            if($post->status === 'published' && empty($post->published_at)) {
+                $post->published_at = now();
+            }
         });
 
         static::updating(function (Post $post) {
@@ -98,6 +102,10 @@ class Post extends Model
                         $post->setTranslation('excerpt', $currentLocale, Str::limit(strip_tags($body), 160));
                     }
                 }
+            }
+
+            if($post->isDirty('status') && $post->status === 'published' && empty($post->published_at)) {
+                $post->published_at = now();
             }
         });
 
@@ -127,14 +135,14 @@ class Post extends Model
     public function scopeByCategory($query, $categorySlug)
     {
         return $query->whereHas('category', function ($q) use ($categorySlug) {
-            $q->where('slug', $categorySlug);
+            $q->bySlug($categorySlug);
         });
     }
 
     public function scopeByTag($query, $tagSlug)
     {
         return $query->whereHas('tags', function ($q) use ($tagSlug) {
-            $q->where('slug', $tagSlug);
+            $q->bySlug($tagSlug);
         });
     }
 
