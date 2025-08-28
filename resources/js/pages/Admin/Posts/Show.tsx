@@ -207,12 +207,12 @@ export default function Show({ post }: Props) {
                       <dt className="text-sm font-medium text-gray-500">OG Description</dt>
                       <dd className="mt-1 text-sm text-gray-900">{post.og_description || tBest('excerpt') || 'No OG description'}</dd>
                     </div>
-                    {(post.og_image || post.featured_image) && (
+                    {(post.og_image || post.thumbnail) && (
                       <div>
                         <dt className="text-sm font-medium text-gray-500">OG Image</dt>
                         <dd className="mt-1">
                           <img
-                            src={`/storage/${post.og_image || post.featured_image}`}
+                            src={`/storage/${post.og_image || post.thumbnail}`}
                             alt="OG Image"
                             className="h-32 w-auto rounded"
                           />
