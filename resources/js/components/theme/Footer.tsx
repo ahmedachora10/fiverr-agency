@@ -97,7 +97,7 @@ const Footer = () => {
         {/* Bottom */}
         <div className="border-t border-white/10 py-6 flex flex-col md:flex-row justify-between items-center text-sm text-white/60">
           <p>
-            {t('footer.copyright')}
+            {t('footer.copyright').replace('<date>', new Date().getFullYear().toString())}
           </p>
           <div className={`flex items-center mt-4 md:mt-0 ${isRTL ? 'space-x-reverse space-x-4' : 'space-x-4'}`}>
             <Mail className="w-4 h-4" />

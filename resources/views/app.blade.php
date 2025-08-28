@@ -30,11 +30,11 @@
             }
         </style>
 
-        <meta name="description" content="{{ config('app.description', 'Fiverr Agency') }}">
-        <meta name="keywords" content="{{ config('app.keywords', 'Fiverr Agency') }}">
+        <meta name="description" content="{{ setting('description', 'Fiverr Agency') }}">
+        <meta name="keywords" content="{{ setting('tagline', 'Fiverr Agency') }}">
         
 
-        <title inertia>{{ config('app.name', 'Fiverr Agency') }}</title>
+        <title inertia>{{ setting('app_name', 'Fiverr Agency') }}</title>
 
         <link rel="icon" href="/icon.png" sizes="any">
         <link rel="icon" href="/icon.png" type="image/png">
