@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Str;
 use Spatie\Translatable\HasTranslations;
 use App\Traits\Slugable;
+use Illuminate\Support\Facades\Storage;
 
 class Post extends Model
 {
@@ -36,6 +37,8 @@ class Post extends Model
     ];
 
     public $translatable = ['title', 'slug', 'excerpt', 'body'];
+
+    protected $appends = ['thumbnail'];
 
     protected $casts = [
         'published_at' => 'datetime',
@@ -109,6 +112,15 @@ class Post extends Model
             }
         });
 
+        static::deleted(function (Post $post) {
+            if ($post->featured_image && Storage::disk('public')->exists($post->featured_image)) {
+                Storage::disk('public')->delete($post->featured_image);
+            }
+            if ($post->og_image && Storage::disk('public')->exists($post->og_image)) {
+                Storage::disk('public')->delete($post->og_image);
+            }
+        });
+
     }
 
     public function author(): BelongsTo
@@ -124,6 +136,11 @@ class Post extends Model
     public function tags(): BelongsToMany
     {
         return $this->belongsToMany(Tag::class)->withTimestamps();
+    }
+
+    public function getThumbnailAttribute()
+    {
+        return $this->featured_image && Storage::disk('public')->exists($this->featured_image) ? asset('storage/' . $this->featured_image) : asset('images/blog-placeholder.webp');
     }
 
     public function scopePublished($query)
@@ -163,7 +180,7 @@ class Post extends Model
 
     public function getOgDescriptionAttribute(): ?string
     {
-        return $this->attributes['og_description'] ?? str($this->excerpt)->limit(160)->toString();
+        return $this->attributes['og_description'] ?? str($this->excerpt)->limit(160,'')->toString();
     }
 
     public function getOgImageAttribute(): ?string

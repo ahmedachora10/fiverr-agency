@@ -47,8 +47,6 @@ export default function Index({ posts, categories, popularTags, filters }: Props
         <FrontAppLayout>
             <Head title="Blog" />
 
-            <TopBar />
-
             <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
                 {/* Modern Header */}
                 <div className="relative bg-gradient-to-br from-blue-50 via-white to-purple-50 border-b border-gray-100">
@@ -113,7 +111,7 @@ export default function Index({ posts, categories, popularTags, filters }: Props
                     </div>
                 </div>
 
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 mt-10">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 py-16">
 
                     <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
 

@@ -30,13 +30,13 @@ const BlogCards = () => {
                             {/* Image */}
                             <div className="relative overflow-hidden">
                                 <img
-                                    src={post.image}
+                                    src={post.thumbnail}
                                     alt={post.title}
                                     className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                                 />
                                 <div className="absolute top-4 left-4">
                                     <span className="bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-medium">
-                                        {post.category}
+                                        {post.category.name}
                                     </span>
                                 </div>
                             </div>

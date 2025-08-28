@@ -37,6 +37,7 @@ export interface BlogPost {
   title: string;
   excerpt: string;
   featured_image: string;
+  thumbnail: string;
   author: User;
   created_at: Date;
   category: Category;
@@ -56,6 +57,7 @@ export interface Post {
   status: 'draft' | 'scheduled' | 'published' | 'archived';
   published_at?: string;
   featured_image?: string;
+  thumbnail?: string;
   meta_title?: string;
   meta_description?: string;
   canonical_url?: string;

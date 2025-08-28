@@ -124,12 +124,12 @@ export default function Show({ post }: Props) {
               </div>
 
               {/* Featured Image */}
-              {post.featured_image && (
+              {post.thumbnail && (
                 <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                   <div className="p-6">
                     <h3 className="text-lg font-medium text-gray-900 mb-4">Featured Image</h3>
                     <img
-                      src={`/storage/${post.featured_image}`}
+                      src={post.thumbnail}
                       alt={tBest('title')}
                       className="w-full h-64 object-cover rounded-lg"
                     />

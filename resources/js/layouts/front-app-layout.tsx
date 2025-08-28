@@ -5,6 +5,8 @@ import { AppContent } from '@/components/app-content';
 import { ReactNode, useEffect } from 'react';
 import { usePage } from '@inertiajs/react';
 import { setting } from '@/lib/utils';
+import TopBar from '@/components/theme/TopBar';
+import Footer from '@/components/theme/Footer';
 
 interface FrontAppLayoutProps {
     children: ReactNode;
@@ -38,7 +40,9 @@ export default ({ children, breadcrumbs, ...props }: FrontAppLayoutProps) => {
             <AppContent className="overflow-x-hidden" {...props}>
                 {/* <AppSidebarHeader breadcrumbs={breadcrumbs} /> */}
                 <LanguageProvider>
+                    <TopBar />
                     {children}
+                    <Footer />
                 </LanguageProvider>
             </AppContent>
         </AppShell>

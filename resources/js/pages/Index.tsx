@@ -14,7 +14,6 @@ const Index = () => {
   return (
     <FrontAppLayout>
       <div className="min-h-screen bg-background">
-        <TopBar />
         <Hero />
         <ServicesGrid />
         <Benefits />
@@ -23,7 +22,6 @@ const Index = () => {
         <Testimonials />
         <FAQ />
         <FinalCTA />
-        <Footer />
       </div>
     </FrontAppLayout>
   );

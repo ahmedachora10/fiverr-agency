@@ -15,12 +15,12 @@ interface Props {
 
 export default function Show({ post, relatedPosts }: Props) {
     const { tBest } = useTranslation(post);
-    const placeHolderBlogImage: string = 'https://blog.snappymob.com/wp-content/uploads/2020/12/8-Tips-for-Designing-Empty-Placeholder-Pages-Leni-Featured.png';
+
     useEffect(() => {
         // Set up SEO meta tags dynamically
         const metaTitle = post.meta_title || tBest('title');
         const metaDescription = post.meta_description || tBest('excerpt') || '';
-        const ogImage = post.og_image ? `/storage/${post.og_image}` : (post.featured_image ? `/storage/${post.featured_image}` : '');
+        const ogImage = post.og_image ? `/storage/${post.og_image}` : (post.thumbnail);
 
         document.title = metaTitle;
 
@@ -102,8 +102,6 @@ export default function Show({ post, relatedPosts }: Props) {
         <FrontAppLayout>
             <Head title={post.meta_title || tBest('title')} />
 
-            <TopBar />
-
             <div className="min-h-screen bg-gray-50">
                 <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                     {/* Navigation */}
@@ -172,10 +170,10 @@ export default function Show({ post, relatedPosts }: Props) {
                     </header>
 
                     {/* Featured Image */}
-                    {post.featured_image && (
+                    {post.thumbnail && (
                         <div className="mb-8">
                             <img
-                                src={post.featured_image ? `/storage/${post.featured_image}` : placeHolderBlogImage}
+                                src={post.thumbnail}
                                 alt={tBest('title')}
                                 className="w-full h-96 object-cover rounded-lg shadow-lg"
                             />
@@ -234,10 +232,10 @@ export default function Show({ post, relatedPosts }: Props) {
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                                 {relatedPosts.map((relatedPost) => (
                                     <article key={relatedPost.id} className="group">
-                                        {relatedPost.featured_image && (
+                                        {relatedPost.thumbnail && (
                                             <div className="aspect-w-16 aspect-h-9 mb-4">
                                                 <img
-                                                    src={relatedPost.featured_image ? `/storage/${relatedPost.featured_image}` : placeHolderBlogImage}
+                                                    src={relatedPost.thumbnail}
                                                     alt={useTranslation(relatedPost).tBest('title')}
                                                     className="w-full h-48 object-cover rounded-lg group-hover:opacity-90 transition-opacity"
                                                 />

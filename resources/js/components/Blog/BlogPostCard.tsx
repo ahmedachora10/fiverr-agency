@@ -38,11 +38,11 @@ export default function BlogPostCard({ post }: BlogPostCardProps) {
             </CardHeader>
 
             {/* Post Image */}
-            {post.featured_image && (
+            {post.thumbnail && (
                 <div className="relative aspect-square overflow-hidden">
                     <Link href={route('blog.show', tBest('slug'))}>
                         <img
-                            src={`/storage/${post.featured_image}`}
+                            src={post.thumbnail}
                             alt={tBest('title')}
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
                         />

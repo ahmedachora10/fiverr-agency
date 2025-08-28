@@ -159,10 +159,10 @@ export default function Index({ posts, categories, filters }: Props) {
                       <tr key={post.id} className="hover:bg-gray-50">
                         <td className="px-6 py-4">
                           <div className="flex items-center">
-                            {post.featured_image && (
+                            {post.thumbnail && (
                               <img
                                 className="h-10 w-10 rounded object-cover mr-4"
-                                src={`/storage/${post.featured_image}`}
+                                src={post.thumbnail}
                                 alt={useTranslation(post).tBest('title')}
                               />
                             )}
