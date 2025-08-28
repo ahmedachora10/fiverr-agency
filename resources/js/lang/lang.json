@@ -118,7 +118,11 @@
         "blog.subtitle": "Stay updated with the latest trends, tips, and success stories from the freelancing world.",
         "blog.readMore": "Read More",
         "blog.viewAll": "View All Posts",
-        "min.read": "min read"
+        "min.read": "min read",
+        "link.back": "Back to Home",
+        "views": "views",
+        "tags": "Tags",
+        "related.posts": "Related Posts"
     },
     "ar": {
         "topbar.save": " وفر حتى 30% على أفضل بائعي فايفر",
@@ -239,6 +243,10 @@
         "blog.subtitle": "ابق محدثاً بأحدث الاتجاهات والنصائح وقصص النجاح من عالم العمل الحر.",
         "blog.readMore": "اقرأ المزيد",
         "blog.viewAll": "عرض جميع المقالات",
-        "min.read": "min read"
+        "link.back": "العودة إلى الصفحة الرئيسية",
+        "min.read": "دقايق",
+        "views": "مشاهدة",
+        "tags": "الوسوم",
+        "related.posts": "المقالات المشابهة"
     }
 }

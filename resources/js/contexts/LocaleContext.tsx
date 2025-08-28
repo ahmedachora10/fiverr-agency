@@ -19,11 +19,11 @@ export function LocaleProvider({ children, initialLocale }: LocaleProviderProps)
   const [locale, setLocaleState] = useState<SupportedLocale>(() => {
     // Priority: initialLocale > page props > browser > default
     if (initialLocale) return initialLocale;
-    
+
     if (typeof window !== 'undefined' && (window as any).page?.props?.locale) {
       return (window as any).page.props.locale as SupportedLocale;
     }
-    
+
     const browserLang = navigator.language.split('-')[0];
     return (browserLang === 'ar' ? 'ar' : 'en') as SupportedLocale;
   });
@@ -33,11 +33,11 @@ export function LocaleProvider({ children, initialLocale }: LocaleProviderProps)
 
   const setLocale = (newLocale: SupportedLocale) => {
     setLocaleState(newLocale);
-    
+
     // Update document direction
     document.documentElement.dir = newLocale === 'ar' ? 'rtl' : 'ltr';
     document.documentElement.lang = newLocale;
-    
+
     // Store in localStorage for persistence
     localStorage.setItem('locale', newLocale);
   };
@@ -73,7 +73,7 @@ export function useLocale(): LocaleContextType {
 // Hook for getting translation functions with current locale context
 export function useTranslationContext() {
   const { locale, isRTL } = useLocale();
-  
+
   return {
     locale,
     isRTL,

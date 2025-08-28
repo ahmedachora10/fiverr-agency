@@ -42,8 +42,7 @@ export default function Index({ posts, categories, popularTags, filters }: Props
     };
 
     return (
-        <FrontAppLayout>
-            <Head title="Blog" />
+        <FrontAppLayout title="Blog">
 
             <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
                 {/* Modern Header */}

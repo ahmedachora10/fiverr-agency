@@ -4,11 +4,39 @@ import { Facebook, Twitter, Instagram, Linkedin, Mail } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { usePageTracking } from "@/hooks/use-page-tracking";
 import { Link } from "@inertiajs/react";
+import { setting } from "@/lib/utils";
 
-
-const Footer = () => {
+const Footer = ({ settings }: any) => {
   const { isRTL, t } = useLanguage();
   const { trackAffiliateFooterClick } = usePageTracking();
+
+  const socialLinks: Array<any> = [
+    {
+      name: 'Facebook',
+      icon: Facebook,
+      link: setting(settings, 'facebook'),
+    },
+    {
+      name: 'Twitter',
+      icon: Twitter,
+      link: setting(settings, 'twitter'),
+    },
+    {
+      name: 'Instagram',
+      icon: Instagram,
+      link: setting(settings, 'instagram'),
+    },
+    {
+      name: 'Linkedin',
+      icon: Linkedin,
+      link: setting(settings, 'linkedin'),
+    },
+    {
+      name: 'Email',
+      icon: Mail,
+      link: setting(settings, 'email'),
+    }
+  ];
 
   function handleAffiliateClick(event: React.MouseEvent<HTMLAnchorElement>, link: string) {
     event.preventDefault();
@@ -50,10 +78,13 @@ const Footer = () => {
               {t('footer.brandDesc')}
             </p>
             <div className="flex space-x-4">
-              <Facebook className="w-5 h-5 hover:text-white/60 cursor-pointer transition-colors" />
-              <Twitter className="w-5 h-5 hover:text-white/60 cursor-pointer transition-colors" />
-              <Instagram className="w-5 h-5 hover:text-white/60 cursor-pointer transition-colors" />
-              <Linkedin className="w-5 h-5 hover:text-white/60 cursor-pointer transition-colors" />
+              {socialLinks.map((link) => (
+                link.link && (
+                  <a key={link.name} href={link.link} target="_blank" rel="noopener noreferrer" className="w-5 h-5 hover:text-white/60 cursor-pointer transition-colors">
+                    <link.icon />
+                  </a>
+                )
+              ))}
             </div>
           </div>
 

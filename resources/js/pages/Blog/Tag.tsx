@@ -1,6 +1,7 @@
 import React from 'react';
 import { Head, Link } from '@inertiajs/react';
 import { Tag, Post, PaginatedData } from '@/types/blog';
+import FrontAppLayout from '@/layouts/front-app-layout';
 
 interface Props {
   tag: Tag;
@@ -9,9 +10,8 @@ interface Props {
 
 export default function TagPage({ tag, posts }: Props) {
   return (
-    <>
-      <Head title={`#${tag.name} - Blog`} />
-      
+    <FrontAppLayout title={`#${tag.name} - Blog`}>
+
       <div className="min-h-screen bg-gray-50">
         {/* Header */}
         <div className="bg-white shadow">
@@ -56,7 +56,7 @@ export default function TagPage({ tag, posts }: Props) {
                         />
                       </div>
                     )}
-                    
+
                     <div className="p-6">
                       {post.category && (
                         <div className="mb-3">
@@ -81,13 +81,13 @@ export default function TagPage({ tag, posts }: Props) {
                           {post.title}
                         </Link>
                       </h2>
-                      
+
                       {post.excerpt && (
                         <p className="text-gray-600 mb-4">
                           {post.excerpt.length > 120 ? `${post.excerpt.substring(0, 120)}...` : post.excerpt}
                         </p>
                       )}
-                      
+
                       <div className="flex items-center justify-between text-sm text-gray-500">
                         <div className="flex items-center">
                           <img
@@ -126,7 +126,7 @@ export default function TagPage({ tag, posts }: Props) {
                   </article>
                 ))}
               </div>
-              
+
               {/* Pagination */}
               {posts.links && (
                 <div className="mt-8">
@@ -163,13 +163,11 @@ export default function TagPage({ tag, posts }: Props) {
                             <Link
                               key={index}
                               href={link.url || '#'}
-                              className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
-                                link.active
+                              className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${link.active
                                   ? 'z-10 bg-indigo-50 border-indigo-500 text-indigo-600'
                                   : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
-                              } ${index === 0 ? 'rounded-l-md' : ''} ${
-                                index === posts.links.length - 1 ? 'rounded-r-md' : ''
-                              }`}
+                                } ${index === 0 ? 'rounded-l-md' : ''} ${index === posts.links.length - 1 ? 'rounded-r-md' : ''
+                                }`}
                               dangerouslySetInnerHTML={{ __html: link.label }}
                             />
                           ))}
@@ -199,13 +197,13 @@ export default function TagPage({ tag, posts }: Props) {
               className="inline-flex items-center text-indigo-600 hover:text-indigo-500"
             >
               <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
               </svg>
               Back to Blog
             </Link>
           </div>
         </div>
       </div>
-    </>
+    </FrontAppLayout>
   );
 }
