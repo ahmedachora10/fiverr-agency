@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Str;
 use Spatie\Translatable\HasTranslations;
 use App\Traits\Slugable;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
 class Post extends Model
@@ -81,6 +82,9 @@ class Post extends Model
             if($post->status === 'published' && empty($post->published_at)) {
                 $post->published_at = now();
             }
+
+            self::clearCache($post);
+
         });
 
         static::updating(function (Post $post) {
@@ -110,6 +114,8 @@ class Post extends Model
             if($post->isDirty('status') && $post->status === 'published' && empty($post->published_at)) {
                 $post->published_at = now();
             }
+
+            self::clearCache($post);
         });
 
         static::deleted(function (Post $post) {
@@ -119,6 +125,8 @@ class Post extends Model
             if ($post->og_image && Storage::disk('public')->exists($post->og_image)) {
                 Storage::disk('public')->delete($post->og_image);
             }
+
+            self::clearCache($post);
         });
 
     }
@@ -199,5 +207,13 @@ class Post extends Model
         $wordsPerMinute = 200; // Average reading speed
         
         return max(1, (int) ceil($wordCount / $wordsPerMinute));
+    }
+
+    private static function clearCache(Post $post): void
+    {
+        Cache::forget("blog.related.{$post->id}");
+        Cache::forget("blog.popular_tags");
+        Cache::forget("blog.posts.{$post->id}");
+        Cache::forget(md5('blog.posts.all'));
     }
 }
