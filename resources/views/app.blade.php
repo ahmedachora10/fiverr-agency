@@ -30,11 +30,11 @@
             }
         </style>
 
-        <meta name="description" content="{{ setting('description', 'Fiverr Agency') }}">
-        <meta name="keywords" content="{{ setting('tagline', 'Fiverr Agency') }}">
+        <meta name="description" content="{{ setting('description', 'Next Level Creators') }}">
+        <meta name="keywords" content="{{ setting('tagline', 'Next Level Creators') }}">
         
 
-        <title inertia>{{ setting('app_name', 'Fiverr Agency') }}</title>
+        <title inertia>{{ setting('app_name', 'Next Level Creators') }}</title>
 
         <link rel="icon" href="/icon.png" sizes="any">
         <link rel="icon" href="/icon.png" type="image/png">

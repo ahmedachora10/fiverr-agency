@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import { Post, Category, Tag, PaginatedData, BlogFilters } from '@/types/blog';
 import { Search, Filter, TagIcon, Boxes } from 'lucide-react';
@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/select';
 import BlogPostCard from '@/components/Blog/BlogPostCard';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { BlogPostsSkeleton, PaginationSkeleton } from '@/components/Skeletons/BlogPostsSkeleton';
 
 interface Props {
     posts: PaginatedData<Post>;
@@ -29,7 +30,17 @@ function FilterAction({ posts, categories, popularTags, filters }: Props) {
     const [search, setSearch] = useState(filters.search || '');
     const [selectedCategory, setSelectedCategory] = useState(filters.category || '');
     const [selectedTag, setSelectedTag] = useState(filters.tag || '');
+    const [isLoading, setIsLoading] = useState(false);
     const { t, isRTL } = useLanguage();
+
+    // Simulate loading state
+    useEffect(() => {
+        setIsLoading(true);
+        const timer = setTimeout(() => {
+            setIsLoading(false);
+        }, 1000);
+        return () => clearTimeout(timer);
+    }, [search, selectedCategory, selectedTag]);
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
@@ -202,7 +213,12 @@ function FilterAction({ posts, categories, popularTags, filters }: Props) {
                     </div>
                     {/* Main Content */}
                     <div className="lg:col-span-3">
-                        {posts.data.length > 0 ? (
+                        {isLoading ? (
+                            <>
+                                <BlogPostsSkeleton />
+                                <PaginationSkeleton />
+                            </>
+                        ) : posts.data.length > 0 ? (
                             <>
                                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 mb-8">
                                     {posts.data.map((post: Post) => (
