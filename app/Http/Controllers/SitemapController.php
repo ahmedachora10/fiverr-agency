@@ -12,7 +12,7 @@ class SitemapController extends Controller
 {
     public function index()
     {
-        $sitemap = Cache::remember('sitemap.xml', now()->addMinutes(1), function () {
+        $sitemap = Cache::remember('sitemap.xml', now()->addDay(), function () {
             $posts = Post::published()
                 ->select(['slug', 'updated_at', 'published_at'])
                 ->get();
