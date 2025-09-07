@@ -12,7 +12,7 @@ class SitemapController extends Controller
 {
     public function index()
     {
-        $sitemap = Cache::remember('sitemap.xml', 3600, function () {
+        $sitemap = Cache::remember('sitemap.xml', now()->addMinutes(1), function () {
             $posts = Post::published()
                 ->select(['slug', 'updated_at', 'published_at'])
                 ->get();
@@ -23,7 +23,6 @@ class SitemapController extends Controller
 
             $tags = Tag::select(['slug', 'updated_at'])
                 ->withCount('publishedPosts')
-                ->having('published_posts_count', '>', 0)
                 ->get();
 
             $xml = '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL;
@@ -35,32 +34,38 @@ class SitemapController extends Controller
 
             // Posts
             foreach ($posts as $post) {
-                $xml .= $this->addUrl(
-                    route('blog.show', $post->slug),
-                    $post->updated_at,
-                    'weekly',
-                    '0.8'
-                );
+                foreach (config('app.locales') as $locale) {
+                    $xml .= $this->addUrl(
+                        route('blog.show', $post->getTranslation('slug', $locale)),
+                        $post->updated_at,
+                        'weekly',
+                        '0.8'
+                    );
+                }
             }
 
             // Categories
             foreach ($categories as $category) {
-                $xml .= $this->addUrl(
-                    route('blog.category', $category->slug),
-                    $category->updated_at,
-                    'weekly',
-                    '0.7'
-                );
+                foreach (config('app.locales') as $locale) {
+                    $xml .= $this->addUrl(
+                        route('blog.category', $category->getTranslation('slug', $locale)),
+                        $category->updated_at,
+                        'weekly',
+                        '0.7'
+                    );
+                }
             }
 
             // Tags
             foreach ($tags as $tag) {
-                $xml .= $this->addUrl(
-                    route('blog.tag', $tag->slug),
-                    $tag->updated_at,
-                    'monthly',
-                    '0.6'
-                );
+                foreach (config('app.locales') as $locale) {
+                    $xml .= $this->addUrl(
+                        route('blog.tag', $tag->getTranslation('slug', $locale)),
+                        $tag->updated_at,
+                        'monthly',
+                        '0.6'
+                    );
+                }
             }
 
             $xml .= '</urlset>';
