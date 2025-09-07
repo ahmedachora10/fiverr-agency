@@ -122,7 +122,17 @@
         "link.back": "Back to Home",
         "views": "views",
         "tags": "Tags",
-        "related.posts": "Related Posts"
+        "related.posts": "Related Posts",
+        "blog.search": "Search viral posts",
+        "next": "Next",
+        "prev": "Previous",
+        "showing": "Showing",
+        "to": "to",
+        "of": "of",
+        "results": "results",
+        "apply_filters": "Apply Filters",
+        "no_posts_found": "No posts found",
+        "select_category": "Select Category"
     },
     "ar": {
         "topbar.save": " وفر حتى 30% على أفضل بائعي فايفر",
@@ -247,6 +257,21 @@
         "min.read": "دقايق",
         "views": "مشاهدة",
         "tags": "الوسوم",
-        "related.posts": "المقالات المشابهة"
+        "blog.search": "ابحث عن المقالات",
+        "related.posts": "المقالات المشابهة",
+        "apply_filters": "تطبيق الفلاتر",
+        "filter": "فلاتر",
+        "search": "بحث",
+        "category": "فئة",
+        "tag": "وسوم",
+        "clear": "مسح",
+        "next": "التالي",
+        "prev": "السابق",
+        "showing": "عرض",
+        "to": "إلى",
+        "of": "من",
+        "results": "نتائج",
+        "select_category": "اختر الفئة",
+        "no_posts_found": "لا يوجد مقالات"
     }
 }

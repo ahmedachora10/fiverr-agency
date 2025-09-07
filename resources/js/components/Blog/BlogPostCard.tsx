@@ -1,12 +1,13 @@
 import { Link } from '@inertiajs/react';
 import { Post } from '@/types/blog';
-import { Heart, MessageCircle, Bookmark, MoreHorizontal, Eye, ArrowRight } from 'lucide-react';
+import { Bookmark, Eye, ArrowRight, ArrowLeft } from 'lucide-react';
 import { useTranslation } from '@/utils/translation';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { usePageTracking } from '@/hooks/use-page-tracking';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface BlogPostCardProps {
     post: Post;
@@ -15,6 +16,7 @@ interface BlogPostCardProps {
 export default function BlogPostCard({ post }: BlogPostCardProps) {
     const { trackEvent } = usePageTracking();
     const { tBest } = useTranslation(post);
+    const { t, isRTL } = useLanguage();
 
     return (
         <Card className="group border-0 hover:shadow-lg transition-all duration-200 overflow-hidden">
@@ -102,8 +104,8 @@ export default function BlogPostCard({ post }: BlogPostCardProps) {
                     </div>
                     <Link href={route('blog.show', tBest('slug'))} onClick={() => trackEvent('click', 'blog', tBest('title'))}>
                         <Button variant="ghost" size="sm" className="group/btn text-primary">
-                            Read More
-                            <ArrowRight className="w-4 h-4 ml-1 group-hover/btn:translate-x-1 transition-transform" />
+                            {t('blog.readMore')}
+                            {isRTL ? <ArrowLeft className="w-4 h-4 ml-1 group-hover/btn:translate-x-1 transition-transform" /> : <ArrowRight className="w-4 h-4 ml-1 group-hover/btn:translate-x-1 transition-transform" />}
                         </Button>
                     </Link>
                 </div>

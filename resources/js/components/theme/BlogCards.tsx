@@ -1,4 +1,4 @@
-import { Calendar, Clock, User, ArrowRight } from "lucide-react";
+import { Calendar, Clock, User, ArrowRight, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { BlogPost } from "@/types/blog";
@@ -11,6 +11,8 @@ const BlogCards = () => {
     const props = usePage().props;
 
     const blogPosts = props.posts as BlogPost[];
+
+    console.log('rtl', isRTL);
 
     return (
         <section id="blog" className="py-20 bg-muted/30">
@@ -75,7 +77,7 @@ const BlogCards = () => {
                                     className={`w-full justify-between group-hover:bg-primary group-hover:text-primary-foreground transition-colors ${isRTL ? 'flex-row-reverse' : ''}`}
                                 >
                                     <span>{t('blog.readMore')}</span>
-                                    <ArrowRight className={`w-4 h-4 group-hover:translate-x-1 transition-transform ${isRTL ? 'rotate-180 group-hover:-translate-x-1' : ''}`} />
+                                    {isRTL ? <ArrowLeft className={`w-4 h-4 group-hover:translate-x-1 transition-transform`} /> : <ArrowRight className={`w-4 h-4 group-hover:translate-x-1 transition-transform`} />}
                                 </Button>
                             </div>
                         </article>

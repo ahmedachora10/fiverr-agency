@@ -1,7 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Clock, User, ArrowRight } from "lucide-react";
+import { Clock, User, ArrowRight, ArrowLeft } from "lucide-react";
 import { Link } from "@inertiajs/react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { usePage } from "@inertiajs/react";
@@ -10,7 +10,7 @@ import { useTranslation } from "@/utils/translation";
 import { usePageTracking } from "@/hooks/use-page-tracking";
 
 const Blogs = () => {
-    const { t } = useLanguage();
+    const { t, isRTL } = useLanguage();
     const { trackEvent } = usePageTracking();
 
     const { props } = usePage();
@@ -82,7 +82,7 @@ const Blogs = () => {
                                             <Link href={route('blog.show', useTranslation(post).tBest('slug'))} onClick={() => trackEvent('click', 'blog', useTranslation(post).tBest('title'))}>
                                                 <Button variant="ghost" size="sm" className="group/btn">
                                                     {t('blog.readMore')}
-                                                    <ArrowRight className="w-4 h-4 ml-1 group-hover/btn:translate-x-1 transition-transform" />
+                                                    {isRTL ? <ArrowLeft className="w-4 h-4 ml-1 group-hover/btn:translate-x-1 transition-transform" /> : <ArrowRight className="w-4 h-4 ml-1 group-hover/btn:translate-x-1 transition-transform" />}
                                                 </Button>
                                             </Link>
                                         </div>
@@ -98,7 +98,7 @@ const Blogs = () => {
                     <Link href={route('blog.index')}>
                         <Button size="lg" className="font-semibold">
                             {t('blog.viewAll')}
-                            <ArrowRight className="w-5 h-5 ml-2" />
+                            {isRTL ? <ArrowLeft className="w-5 h-5 ml-2" /> : <ArrowRight className="w-5 h-5 ml-2" />}
                         </Button>
                     </Link>
                 </div>
