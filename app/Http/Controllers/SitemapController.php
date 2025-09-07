@@ -80,7 +80,7 @@ class SitemapController extends Controller
 
     public function robots()
     {
-        $robots = Cache::remember('robots.txt', 86400, function () {
+        $robots = Cache::remember('robots.txt', now()->addYear(), function () {
             $content = "User-agent: *\n";
             $content .= "Allow: /\n";
             $content .= "Disallow: /admin/\n";
