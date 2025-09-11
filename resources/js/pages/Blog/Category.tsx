@@ -1,114 +1,104 @@
-import React from 'react';
-import { Head, Link } from '@inertiajs/react';
+import React, { useEffect, useState } from 'react';
+import { Link } from '@inertiajs/react';
 import { Category, Post, PaginatedData } from '@/types/blog';
 import FrontAppLayout from '@/layouts/front-app-layout';
+import { useTranslation } from '@/utils/translation';
+import { useLanguage } from '@/contexts/LanguageContext';
+import BlogPostCard from '@/components/Blog/BlogPostCard';
+import { BlogPostsSkeleton, PaginationSkeleton } from '@/components/Skeletons/BlogPostsSkeleton';
+import CategoryHero from '@/components/Blog/CategoryHero';
+import { updateLangLink, updateMetaTag } from '@/lib/utils';
 
 interface Props {
   category: Category;
   posts: PaginatedData<Post>;
 }
 
-export default function CategoryPage({ category, posts }: Props) {
+function PostsByCategory({ category, posts }: Props) {
+  const { t } = useLanguage();
+  const [isLoading, setIsLoading] = useState(false);
+  const { tBest } = useTranslation(category);
+
+  useEffect(() => {
+    setIsLoading(true);
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [posts]);
+
+
+  useEffect(() => {
+    // Set up SEO meta tags dynamically
+    const metaTitle = category.meta_title || tBest('name');
+    const metaDescription = category.meta_description || tBest('description') || '';
+    // const ogImage = category.og_image ? `/storage/${category.og_image}` : (category.thumbnail);
+
+    document.title = tBest('name');
+
+    updateMetaTag('description', metaDescription);
+
+
+    updateLangLink('canonical', route('blog.category', tBest('slug')));
+
+    if (category.slug) {
+      for (const [lang, slug] of Object.entries(category.slug)) {
+        updateLangLink('alternate', route('blog.category', slug), lang);
+      }
+    }
+
+
+    // Add structured data
+    const structuredData: any = {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": metaTitle,
+      "description": metaDescription,
+      "datePublished": category.created_at,
+      "dateModified": category.updated_at,
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": window.location.href
+      },
+      "articleSection": metaTitle
+    };
+
+    // if (category.tags.length > 0) {
+    //     structuredData["keywords"] = category.tags.map(tag => useTranslation(tag).tBest('name')).join(', ');
+    // }
+
+    let structuredDataScript: HTMLScriptElement | null = document.querySelector('script[type="application/ld+json"]');
+    if (!structuredDataScript) {
+      structuredDataScript = document.createElement('script');
+      structuredDataScript.type = 'application/ld+json';
+      document.head.appendChild(structuredDataScript);
+    }
+    structuredDataScript.textContent = JSON.stringify(structuredData);
+
+    return () => {
+      // Cleanup function to reset title when component unmounts
+      document.title = tBest('name');
+    };
+  }, [category]);
+
   return (
-    <FrontAppLayout title={`${category.name} - Blog`}>
+    <div className="min-h-screen bg-gray-50">
+      {/* Hero Section */}
+      <CategoryHero category={category} postCount={posts.total} />
 
-      <div className="min-h-screen bg-gray-50">
-        {/* Header */}
-        <div className="bg-white shadow">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <div className="text-center">
-              <div className="mb-4">
-                <span
-                  className="inline-flex items-center px-4 py-2 rounded-full text-lg font-medium"
-                  style={{
-                    backgroundColor: `${category.color}20`,
-                    color: category.color,
-                  }}
-                >
-                  {category.name}
-                </span>
-              </div>
-              <h1 className="text-4xl font-bold text-gray-900 mb-4">{category.name}</h1>
-              {category.description && (
-                <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                  {category.description}
-                </p>
-              )}
-              <p className="text-sm text-gray-500 mt-2">
-                {posts.total} {posts.total === 1 ? 'post' : 'posts'}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {posts.data.length > 0 ? (
+      {/* Main Content */}
+      <div className="relative z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-white">
+          {isLoading ? (
+            <>
+              <BlogPostsSkeleton />
+              <PaginationSkeleton />
+            </>
+          ) : posts.data.length > 0 ? (
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
                 {posts.data.map((post) => (
-                  <article key={post.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-                    {post.featured_image && (
-                      <div className="aspect-w-16 aspect-h-9">
-                        <img
-                          src={`/storage/${post.featured_image}`}
-                          alt={post.title}
-                          className="w-full h-48 object-cover"
-                        />
-                      </div>
-                    )}
-
-                    <div className="p-6">
-                      <h2 className="text-xl font-semibold text-gray-900 mb-3">
-                        <Link
-                          href={route('blog.show', post.slug)}
-                          className="hover:text-indigo-600 transition-colors"
-                        >
-                          {post.title}
-                        </Link>
-                      </h2>
-
-                      {post.excerpt && (
-                        <p className="text-gray-600 mb-4">
-                          {post.excerpt.length > 120 ? `${post.excerpt.substring(0, 120)}...` : post.excerpt}
-                        </p>
-                      )}
-
-                      <div className="flex items-center justify-between text-sm text-gray-500">
-                        <div className="flex items-center">
-                          <img
-                            className="h-6 w-6 rounded-full mr-2"
-                            src={`https://ui-avatars.com/api/?name=${encodeURIComponent(post.author.name)}&background=6366f1&color=fff&size=24`}
-                            alt={post.author.name}
-                          />
-                          <span>{post.author.name}</span>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <span>{new Date(post.published_at || post.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
-                          <span>•</span>
-                          <span>{post.reading_time_minutes} min</span>
-                        </div>
-                      </div>
-
-                      {/* Tags */}
-                      {post.tags.length > 0 && (
-                        <div className="mt-4 flex flex-wrap gap-2">
-                          {post.tags.slice(0, 3).map((tag) => (
-                            <Link
-                              key={tag.id}
-                              href={route('blog.tag', tag.slug)}
-                              className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium hover:opacity-80 transition-opacity"
-                              style={{
-                                backgroundColor: `${tag.color}20`,
-                                color: tag.color,
-                              }}
-                            >
-                              #{tag.name}
-                            </Link>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  </article>
+                  <BlogPostCard key={post.id} post={post} />
                 ))}
               </div>
 
@@ -122,7 +112,7 @@ export default function CategoryPage({ category, posts }: Props) {
                           href={posts.prev_page_url}
                           className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
                         >
-                          Previous
+                          {t('previous')}
                         </Link>
                       )}
                       {posts.next_page_url && (
@@ -130,16 +120,16 @@ export default function CategoryPage({ category, posts }: Props) {
                           href={posts.next_page_url}
                           className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
                         >
-                          Next
+                          {t('next')}
                         </Link>
                       )}
                     </div>
                     <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
                       <div>
                         <p className="text-sm text-gray-700">
-                          Showing <span className="font-medium">{posts.from}</span> to{' '}
-                          <span className="font-medium">{posts.to}</span> of{' '}
-                          <span className="font-medium">{posts.total}</span> results
+                          {t('showing')} <span className="font-medium">{posts.from}</span> {t('to')}{' '}
+                          <span className="font-medium">{posts.to}</span> {t('of')}{' '}
+                          <span className="font-medium">{posts.total}</span> {t('results')}
                         </p>
                       </div>
                       <div>
@@ -149,8 +139,8 @@ export default function CategoryPage({ category, posts }: Props) {
                               key={index}
                               href={link.url || '#'}
                               className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${link.active
-                                  ? 'z-10 bg-indigo-50 border-indigo-500 text-indigo-600'
-                                  : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
+                                ? 'z-10 bg-indigo-50 border-indigo-500 text-indigo-600'
+                                : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
                                 } ${index === 0 ? 'rounded-l-md' : ''} ${index === posts.links.length - 1 ? 'rounded-r-md' : ''
                                 }`}
                               dangerouslySetInnerHTML={{ __html: link.label }}
@@ -176,7 +166,7 @@ export default function CategoryPage({ category, posts }: Props) {
           )}
 
           {/* Navigation */}
-          <div className="mt-12 pt-8 border-t border-gray-200">
+          {/* <div className="mt-12 pt-8 border-t border-gray-200">
             <Link
               href={route('blog.index')}
               className="inline-flex items-center text-indigo-600 hover:text-indigo-500"
@@ -184,11 +174,21 @@ export default function CategoryPage({ category, posts }: Props) {
               <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
               </svg>
-              Back to Blog
+              {t('back_to_blog')}
             </Link>
-          </div>
+          </div> */}
         </div>
       </div>
+    </div>
+  );
+}
+
+export default function CategoryPage({ category, posts }: Props) {
+
+  return (
+    <FrontAppLayout title={`${useTranslation(category).tBest('name')} - Blog`}>
+      <PostsByCategory category={category} posts={posts} />
     </FrontAppLayout>
   );
+
 }

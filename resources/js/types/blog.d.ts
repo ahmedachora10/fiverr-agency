@@ -9,6 +9,7 @@ export interface Category {
   name: Record<string, string>;
   slug: Record<string, string>;
   description?: Record<string, string>;
+  thumbnail?: string;
   color: string;
   meta_title?: string;
   meta_description?: string;

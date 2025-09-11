@@ -132,7 +132,9 @@
         "results": "results",
         "apply_filters": "Apply Filters",
         "no_posts_found": "No posts found",
-        "select_category": "Select Category"
+        "select_category": "Select Category",
+        "post": "Post",
+        "posts": "Posts"
     },
     "ar": {
         "topbar.save": " وفر حتى 30% على أفضل بائعي فايفر",
@@ -272,6 +274,8 @@
         "of": "من",
         "results": "نتائج",
         "select_category": "اختر الفئة",
-        "no_posts_found": "لا يوجد مقالات"
+        "no_posts_found": "لا يوجد مقالات",
+        "post": "مقال",
+        "posts": "مقالات"
     }
 }

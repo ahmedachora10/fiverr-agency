@@ -6,6 +6,8 @@ import { useTranslation } from '@/utils/translation';
 import QuillRenderer from '@/components/Editor/EditorJSRenderer';
 import FrontAppLayout from '@/layouts/front-app-layout';
 import { useLanguage } from '@/contexts/LanguageContext';
+import HeroSection from '@/components/Blog/HeroSection';
+import { updateLangLink, updateMetaTag } from '@/lib/utils';
 
 
 interface Props {
@@ -25,21 +27,14 @@ function ShowContent({ post, relatedPosts }: Props) {
 
         document.title = metaTitle;
 
-        // Update meta tags
-        const updateMetaTag = (name: string, content: string, property = false) => {
-            const selector = property ? `meta[property="${name}"]` : `meta[name="${name}"]`;
-            let meta = document.querySelector(selector) as HTMLMetaElement;
-            if (!meta) {
-                meta = document.createElement('meta');
-                if (property) {
-                    meta.setAttribute('property', name);
-                } else {
-                    meta.setAttribute('name', name);
-                }
-                document.head.appendChild(meta);
+        updateLangLink('canonical', route('blog.show', tBest('slug')));
+
+        if (post.slug) {
+            for (const [lang, slug] of Object.entries(post.slug)) {
+                updateLangLink('alternate', route('blog.show', slug), lang);
             }
-            meta.content = content;
-        };
+        }
+
 
         updateMetaTag('description', metaDescription);
         updateMetaTag('og:title', post.og_title || tBest('title'), true);

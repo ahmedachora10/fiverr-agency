@@ -48,9 +48,11 @@ const Blogs = () => {
                                     <CardHeader className="pb-4">
                                         <div className="flex items-center gap-2 mb-3">
                                             {post.category && (
-                                                <Badge variant="secondary" className="text-xs">
-                                                    {useTranslation(post.category).tBest('name')}
-                                                </Badge>
+                                                <Link href={route('blog.category', useTranslation(post.category).tBest('slug'))}>
+                                                    <Badge variant="secondary" className="text-xs">
+                                                        {useTranslation(post.category).tBest('name')}
+                                                    </Badge>
+                                                </Link>
                                             )}
                                             <div className="flex items-center text-muted-foreground text-sm gap-4">
                                                 <div className="flex items-center gap-1">
