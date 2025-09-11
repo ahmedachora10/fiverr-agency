@@ -169,11 +169,11 @@ function ShowContent({ post, relatedPosts }: Props) {
 
                 {/* Featured Image */}
                 {post.thumbnail && (
-                    <div className="mb-8">
+                    <div className="mb-8 relative aspect-video overflow-hidden">
                         <img
                             src={post.thumbnail}
                             alt={tBest('title')}
-                            className="w-full h-96 object-cover rounded-lg shadow-lg"
+                            className="w-full h-full object-cover rounded-lg shadow-lg"
                         />
                     </div>
                 )}

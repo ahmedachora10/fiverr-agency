@@ -41,7 +41,7 @@ export default function BlogPostCard({ post }: BlogPostCardProps) {
 
             {/* Post Image */}
             {post.thumbnail && (
-                <div className="relative aspect-square overflow-hidden">
+                <div className="relative aspect-[4/3] overflow-hidden">
                     <Link href={route('blog.show', tBest('slug'))}>
                         <img
                             src={post.thumbnail}

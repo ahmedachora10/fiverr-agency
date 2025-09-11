@@ -38,7 +38,7 @@ const Blogs = () => {
                         <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-8">
                             {posts.map((post: BlogPost) => (
                                 <Card key={post.id} className="group hover:shadow-lg transition-all duration-300 border-muted">
-                                    <div className="aspect-video bg-muted rounded-t-lg overflow-hidden">
+                                    <div className="aspect-[4/3] bg-muted rounded-t-lg overflow-hidden">
                                         <img
                                             src={post.thumbnail}
                                             alt={useTranslation(post).tBest('title')}
